@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fiche d'Évaluation Interactive Unifiée</title>
+    <style>
+        :root {
+            --primary: #1565C0;
+            --primary-light: #1976D2;
+            --primary-dark: #0D47A1;
+            --accent: #FFA000;
+            --text: #212121;
+            --text-light: #757575;
+            --background: #F5F5F5;
+            --white: #FFFFFF;
+            --gray-light: #EEEEEE;
+            --border: #E0E0E0;
+            --success: #4CAF50;
+            --error: #F44336;
+            --info: #2196F3;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            color: white;
+            padding: 1.5rem 1rem;
+            text-align: center;
+            border-bottom: 5px solid var(--accent);
+        }
+        
+        .header h1, .header p {
+            cursor: pointer;
+        }
+        
+        .header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+        
+        .card {
+            background-color: var(--white);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+        }
+        
+        .card-header {
+            background-color: var(--gray-light);
+            color: var(--primary-dark);
+            padding: 0.8rem 1rem;
+            font-weight: bold;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .card-body {
+            padding: 1rem;
+        }
+        
+        h2 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: var(--primary-dark);
+        }
+        
+        .legende .card-body {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .niveau-item, .status-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            background-color: var(--white);
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+
+        .emoji { font-size: 1.2rem; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            font-size: 0.9rem;
+        }
+        
+        th, td {
+            border: 1px solid var(--border);
+            padding: 10px;
+            text-align: center;
+        }
+        
+        th {
+            background-color: var(--primary);
+            color: white;
+            text-align: center;
+            font-weight: bold;
+            padding: 0.8rem;
+            white-space: nowrap;
+        }
+
+        td:first-child {
+            text-align: left;
+        }
+        
+        tbody tr:nth-child(even) { background-color: var(--gray-light); }
+        tbody tr:hover { background-color: rgba(25, 118, 210, 0.08); }
+        
+        input, select, textarea {
+            padding: 8px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            box-sizing: border-box;
+            width: 100%;
+        }
+        
+        select {
+            text-align-last: center;
+        }
+        
+        .notes {
+            padding: 1rem;
+            background-color: #e3f2fd;
+            border-left: 5px solid var(--info);
+            border-radius: 4px;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+            margin-bottom: 1rem;
+        }
+        
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        
+        .btn-danger { background-color: var(--error); }
+        .btn-danger:hover { background-color: #D32F2F; }
+        .btn-success { background-color: var(--success); }
+        .btn-success:hover { background-color: #388E3C; }
+        .btn-config { background-color: var(--accent); }
+        .btn-config:hover { background-color: #d88900; }
+
+        .actions {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .save-load-area {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background-color: var(--white);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .section-header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            padding: 12px;
+            margin-top: 20px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 1.3em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .section-description {
+            background-color: #e3f2fd;
+            padding: 10px 15px;
+            margin: 0 0 15px 0;
+            border-radius: 4px;
+            font-size: 0.95em;
+            border-left: 4px solid var(--info);
+            cursor: pointer;
+        }
+        
+        .competence-header {
+            background-color: var(--info);
+            color: white;
+            padding: 8px;
+            margin-top: 10px;
+            margin-bottom: 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+        
+        .criteria-item {
+            margin-bottom: 8px;
+            padding: 8px;
+            padding-left: 20px;
+            position: relative;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        .criteria-item:hover {
+            background-color: var(--gray-light);
+        }
+
+        .criteria-item::before {
+            content: "›";
+            position: absolute;
+            left: 5px;
+            color: var(--primary);
+            font-size: 1.5em;
+            font-weight: bold;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .ref-text {
+            color: var(--primary-dark);
+            font-size: 0.85em;
+            font-weight: 600;
+            background-color: #e9ecef;
+            padding: 2px 6px;
+            border-radius: 3px;
+            margin-left: 8px;
+            white-space: nowrap;
+        }
+        
+        .alert {
+            background-color: #FFF3E0;
+            color: #E65100;
+            padding: 15px;
+            border-left: 5px solid #FF9800;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        
+        .autosave-status {
+            margin-left: auto;
+            font-size: 0.9em;
+            color: var(--text-light);
+        }
+        
+        #importFileInput, #importJsonInput { display: none; }
+        
+        .file-upload-btn {
+            background-color: var(--primary);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: inline-block;
+        }
+        
+        .edit-mode-controls {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: var(--accent);
+            color: white;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            background-color: var(--primary-dark);
+            color: white;
+            font-size: 0.9rem;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: modal-appear 0.3s ease-out;
+        }
+
+        @keyframes modal-appear {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .modal-title { font-size: 1.2em; font-weight: bold; }
+        
+        .close-modal {
+            font-size: 1.8em;
+            cursor: pointer;
+            background: none;
+            border: none;
+            color: var(--text-light);
+        }
+        
+        .modal-footer {
+            margin-top: 15px;
+            padding-top: 10px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        
+        .config-form-group { margin-bottom: 15px; }
+        .config-form-group label { display: block; margin-bottom: 5px; font-weight: bold; }
+        
+        .edit-controls {
+            display: none;
+            margin-left: auto;
+        }
+
+        .edit-btn, .add-btn, .delete-btn {
+            background-color: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 1em;
+            margin-left: 8px;
+            border-radius: 4px;
+            padding: 4px 8px;
+            transition: background-color 0.2s;
+        }
+
+        .edit-btn:hover, .add-btn:hover, .delete-btn:hover {
+            background-color: rgba(255, 255, 255, 0.4);
+        }
+        
+        .section-header:hover .edit-controls,
+        .competence-header:hover .edit-controls {
+            display: inline-block;
+        }
+        
+        .criteria-item .edit-controls {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: var(--gray-light);
+            padding: 2px;
+            border-radius: 4px;
+        }
+
+        .criteria-item .edit-controls .edit-btn,
+        .criteria-item .edit-controls .delete-btn {
+            color: var(--primary);
+            background: none;
+        }
+        .criteria-item:hover .edit-controls {
+            display: block;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 { font-size: 1.5rem; }
+            .header p { font-size: 1rem; }
+            .actions { flex-direction: column; align-items: stretch; }
+            table { display: block; white-space: nowrap; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Modal pour l'édition -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">Éditer</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody"></div>
+            <div class="modal-footer">
+                <button class="btn btn-danger" id="modalCancel">Annuler</button>
+                <button class="btn btn-success" id="modalSave">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contenu principal -->
+    <div class="header">
+        <h1 id="mainTitle">Fiche d'Évaluation Interactive</h1>
+        <p id="subTitle">Formation / Classe</p>
+    </div>
+    
+    <div class="container">
+        <div id="preview-warning" class="alert" style="display: none;">
+            ⚠️ Vous êtes en mode prévisualisation. Pour utiliser toutes les fonctionnalités (sauvegarde, import/export), veuillez télécharger ce fichier et l'ouvrir localement.
+            <div style="margin-top: 10px;">
+                <a id="downloadLink" class="btn btn-success" download="evaluation-interactive.html">⬇️ Télécharger ce fichier</a>
+            </div>
+        </div>
+        
+        <div class="actions">
+            <button id="toggleEditMode" class="btn btn-config">⚙️ Configurer le modèle</button>
+            <button id="exportJsonData" class="btn">💾 Exporter Données (JSON)</button>
+            <button id="importJsonData" class="btn">📂 Importer Données (JSON)</button>
+            <button id="exportCsv" class="btn">📤 Exporter en CSV</button>
+            <button id="importCsv" class="btn">📥 Importer CSV d'élèves</button>
+            <button id="addEleve" class="btn">➕ Ajouter un élève</button>
+            <button id="resetData" class="btn btn-danger">🔄 Réinitialiser</button>
+            <span id="autosaveStatus" class="autosave-status"></span>
+        </div>
+        
+        <!-- Panneaux cachés pour import/export -->
+        <input type="file" id="importJsonInput" accept=".json" style="display: none;">
+        <div id="importArea" class="save-load-area" style="display: none;">
+            <h3>Importer une liste d'élèves (CSV):</h3>
+            <label for="importFileInput" class="file-upload-btn">Choisir un fichier</label>
+            <input type="file" id="importFileInput" accept=".csv">
+            <span id="importFileName">Aucun fichier sélectionné</span>
+            <p style="font-size:0.8em; color: #666;">Le fichier CSV doit contenir une colonne "Nom".</p>
+            <button id="processImportCsv" class="btn btn-success" style="display: none;">Importer la liste</button>
+        </div>
+        <div id="editModelArea" class="save-load-area" style="display: none;">
+            <h3>Code de configuration du modèle:</h3>
+            <textarea id="modelConfigCode"></textarea>
+            <button id="applyModelConfig" class="btn btn-success">Appliquer la configuration</button>
+            <button id="copyModelConfig" class="btn">Copier la configuration</button>
+        </div>
+
+        <!-- Panneau de configuration du modèle -->
+        <div id="edit-mode-panel" class="edit-mode-controls" style="display: none;">
+            <div style="font-weight: bold;">Mode Configuration du Modèle</div>
+            <div>
+                <button id="addSectionBtn" class="btn btn-success">➕ Ajouter une section</button>
+                <button id="saveModelBtn" class="btn">💾 Exporter config</button>
+                <button id="loadModelBtn" class="btn">📂 Importer config</button>
+                <button id="exitEditModeBtn" class="btn btn-danger">Quitter</button>
+            </div>
+        </div>
+        
+        <!-- Grille de la structure (compétences) -->
+        <div id="structure-grid" class="card">
+            <div class="card-header"><h2 id="main-card-header" style="margin:0; font-size:1.2rem;">Structure de l'évaluation</h2></div>
+            <div class="card-body">
+                <!-- Les sections et compétences seront générées ici -->
+            </div>
+        </div>
+
+        <!-- Légende -->
+        <div class="legende card">
+            <div class="card-header">Légende</div>
+            <div class="card-body">
+                <div class="niveau-item"><span class="emoji">✅</span><span>Réussite autonome</span></div>
+                <div class="niveau-item"><span class="emoji">🟩</span><span>Réussite avec aide</span></div>
+                <div class="niveau-item"><span class="emoji">🟧</span><span>Réussite partielle</span></div>
+                <div class="niveau-item"><span class="emoji">🟥</span><span>Non réussi</span></div>
+                <div class="status-item"><strong>ABS</strong><span>Absent</span></div>
+                <div class="status-item"><strong>NE</strong><span>Non Évalué</span></div>
+            </div>
+        </div>
+        
+        <!-- Conteneur pour les tableaux d'évaluation -->
+        <div id="evaluation-tables-container">
+            <!-- Les tableaux par section seront générés ici -->
+        </div>
+        
+        <div class="notes">
+            <h3>Notes pour l'enseignant</h3>
+            <p>• Ce modèle est entièrement personnalisable via le bouton "Configurer le modèle".</p>
+            <p>• Les données (élèves et évaluations) sont sauvegardées automatiquement dans votre navigateur. Utilisez les boutons de sauvegarde/chargement manuels pour transférer les données entre différents postes ou navigateurs.</p>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p id="footerText">Votre nom et académie</p>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // CONFIGURATION DU MODÈLE PAR DÉFAUT
+            let modelConfig = {
+                title: "Fiche d'Évaluation Interactive",
+                subtitle: "Bac Pro CIEL - Lycée Amiral LACAZE",
+                mainCardHeader: "TP Modifiable - Modèle de base",
+                footerText: "Tom Laune - Académie de La Réunion",
+                sections: [
+                    {
+                        id: `section_${Date.now()}`,
+                        title: "MOMENT 1 - Exemple",
+                        description: "<strong>Compétence X :</strong> Description de la compétence<br><strong>Compétence Y :</strong> Autre description",
+                        competences: [
+                            {
+                                id: `comp_${Date.now()}`, title: "Critères de la section",
+                                criterias: [
+                                    { text: "Critère 1.1", ref: "Réf. 1" },
+                                    { text: "Critère 1.2", ref: "Réf. 2" }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            };
+
+            // ÉTAT GLOBAL
+            let eleves = [ { id: 1, nom: "Élève Individuel 1" }, { id: 2, nom: "Élève Individuel 2" } ];
+            let evaluations = {};
+            let editMode = false;
+            let autosaveEnabled = true;
+            let currentEditContext = null;
+
+            // CONSTANTES
+            const niveaux = ["", "✅", "🟩", "🟧", "🟥", "ABS", "NE"];
+            const DATA_STORAGE_KEY = 'EVAL_DATA_UNIFIED_V2';
+            const MODEL_STORAGE_KEY = 'EVAL_MODEL_UNIFIED_V2';
+
+            // DÉTECTION MODE PRÉVISUALISATION
+            const inSandbox = (() => {
+                try {
+                    localStorage.setItem('test', 'test'); localStorage.removeItem('test'); return false;
+                } catch (e) { return true; }
+            })();
+
+            if (inSandbox) {
+                document.getElementById('preview-warning').style.display = 'block';
+                autosaveEnabled = false;
+                document.getElementById('downloadLink').href = URL.createObjectURL(new Blob([document.documentElement.outerHTML], { type: 'text/html' }));
+            }
+
+            // SÉLECTEURS DOM
+            const dom = {
+                mainTitle: document.getElementById('mainTitle'),
+                subTitle: document.getElementById('subTitle'),
+                mainCardHeader: document.getElementById('main-card-header'),
+                footerText: document.getElementById('footerText'),
+                structureGridBody: document.querySelector('#structure-grid .card-body'),
+                tablesContainer: document.getElementById('evaluation-tables-container'),
+                autosaveStatusEl: document.getElementById('autosaveStatus'),
+                editModePanel: document.getElementById('edit-mode-panel'),
+                modal: document.getElementById('editModal'),
+                modalTitle: document.getElementById('modalTitle'),
+                modalBody: document.getElementById('modalBody'),
+            };
+
+            // --- INITIALISATION ---
+            function init() {
+                loadModelFromLocalStorage();
+                loadDataFromLocalStorage();
+                initializeEvaluations();
+                renderUI();
+                attachEventListeners();
+                updateAutosaveStatus();
+            }
+
+            // --- GESTION DES DONNÉES (LOCALSTORAGE) ---
+            const saveDataToLocalStorage = () => {
+                if (!autosaveEnabled) return;
+                try {
+                    localStorage.setItem(DATA_STORAGE_KEY, JSON.stringify({ eleves, evaluations }));
+                    updateAutosaveStatus(true);
+                } catch (e) { console.error("Error saving data:", e); }
+            };
+
+            const loadDataFromLocalStorage = () => {
+                if (inSandbox) return;
+                const savedData = localStorage.getItem(DATA_STORAGE_KEY);
+                if (savedData) {
+                    const data = JSON.parse(savedData);
+                    eleves = data.eleves || eleves;
+                    evaluations = data.evaluations || {};
+                }
+            };
+            
+            const saveModelToLocalStorage = () => {
+                if (!autosaveEnabled) return;
+                try {
+                    localStorage.setItem(MODEL_STORAGE_KEY, JSON.stringify(modelConfig));
+                } catch (e) { console.error("Error saving model:", e); }
+            };
+
+            const loadModelFromLocalStorage = () => {
+                if (inSandbox) return;
+                const savedModel = localStorage.getItem(MODEL_STORAGE_KEY);
+                if (savedModel) {
+                    modelConfig = JSON.parse(savedModel);
+                }
+            };
+            
+            // --- RENDU DE L'INTERFACE ---
+            function renderUI() {
+                renderStaticTexts();
+                renderStructureGrid();
+                renderAllEvaluationTables();
+            }
+
+            function renderStaticTexts() {
+                dom.mainTitle.textContent = modelConfig.title;
+                dom.subTitle.textContent = modelConfig.subtitle;
+                dom.mainCardHeader.textContent = modelConfig.mainCardHeader;
+                dom.footerText.textContent = modelConfig.footerText;
+            }
+
+            function renderStructureGrid() {
+                dom.structureGridBody.innerHTML = '';
+                modelConfig.sections.forEach(section => {
+                    const sectionHeader = createDOMElement('div', 'section-header', `<span>${section.title}</span>`);
+                    if(editMode) addEditControls(sectionHeader, 'section', section.id);
+                    dom.structureGridBody.appendChild(sectionHeader);
+
+                    const sectionDescription = createDOMElement('div', 'section-description', section.description);
+                    if(editMode) sectionDescription.onclick = () => openEditModal('edit', 'section', section.id);
+                    dom.structureGridBody.appendChild(sectionDescription);
+                    
+                    section.competences.forEach(comp => {
+                         const compHeader = createDOMElement('div', 'competence-header', `<span>${comp.title}</span>`);
+                         if(editMode) addEditControls(compHeader, 'competence', section.id, comp.id);
+                         dom.structureGridBody.appendChild(compHeader);
+
+                        const criteriaContainer = createDOMElement('div', 'criteria-container');
+                        comp.criterias.forEach((crit, index) => {
+                            const critItem = createDOMElement('div', 'criteria-item', `
+                                <span>${crit.text}</span>
+                                ${crit.ref ? `<span class="ref-text">${crit.ref}</span>` : ''}
+                            `);
+                             if(editMode) {
+                                critItem.onclick = () => openEditModal('edit', 'criteria', section.id, comp.id, index);
+                                addEditControls(critItem, 'criteria', section.id, comp.id, index);
+                             }
+                             criteriaContainer.appendChild(critItem);
+                        });
+                        dom.structureGridBody.appendChild(criteriaContainer);
+                    });
+                });
+            }
+
+            function renderAllEvaluationTables() {
+                dom.tablesContainer.innerHTML = '';
+                modelConfig.sections.forEach(section => {
+                    renderEvaluationTable(section);
+                });
+            }
+
+            function renderEvaluationTable(section) {
+                const sectionContainer = createDOMElement('div', 'card');
+                const tableHeader = createDOMElement('div', 'card-header', `<h2 style="margin:0; font-size:1.2rem;">Évaluation - ${section.title}</h2>`);
+                sectionContainer.appendChild(tableHeader);
+
+                const tableContainer = createDOMElement('div', 'table-container');
+                const table = createDOMElement('table');
+                const thead = createDOMElement('thead');
+                const headerRow = createDOMElement('tr');
+                
+                let headers = ['Élève'];
+                let allCriterias = section.competences.flatMap(c => c.criterias);
+                headers.push(...allCriterias.map(crit => crit.text));
+                headers.push('Observations');
+
+                headers.forEach(h => headerRow.appendChild(createDOMElement('th', '', h)));
+                thead.appendChild(headerRow);
+                table.appendChild(thead);
+                
+                const tbody = createDOMElement('tbody');
+                eleves.forEach(eleve => {
+                    const row = createDOMElement('tr');
+                    const tdNom = createDOMElement('td');
+                    const inputNom = createDOMElement('input', '', null, {type: 'text', value: eleve.nom, 'data-eleve-id': eleve.id});
+                    inputNom.addEventListener('change', handleNameChange);
+                    tdNom.appendChild(inputNom);
+                    row.appendChild(tdNom);
+
+                    allCriterias.forEach((crit, critIndex) => {
+                        const td = createDOMElement('td');
+                        const select = createDOMElement('select', '', null, {'data-eleve-id': eleve.id, 'data-section-id': section.id, 'data-crit-index': critIndex});
+                        niveaux.forEach(n => select.add(new Option(n, n)));
+                        select.value = evaluations[`${eleve.id}-${section.id}-${critIndex}`] || '';
+                        select.addEventListener('change', handleEvalChange);
+                        td.appendChild(select);
+                        row.appendChild(td);
+                    });
+
+                    const tdObs = createDOMElement('td');
+                    const inputObs = createDOMElement('input', '', null, {type: 'text', placeholder: '...', 'data-eleve-id': eleve.id, 'data-section-id': section.id});
+                    inputObs.value = evaluations[`${eleve.id}-${section.id}-obs`] || '';
+                    inputObs.addEventListener('change', handleObsChange);
+                    tdObs.appendChild(inputObs);
+                    row.appendChild(tdObs);
+                    tbody.appendChild(row);
+                });
+                table.appendChild(tbody);
+                tableContainer.appendChild(table);
+                sectionContainer.appendChild(tableContainer);
+                dom.tablesContainer.appendChild(sectionContainer);
+            }
+
+            // --- GESTIONNAIRES D'ÉVÉNEMENTS ---
+            function handleNameChange(e) {
+                const eleveId = parseInt(e.target.dataset.eleveId);
+                const eleve = eleves.find(el => el.id === eleveId);
+                if (eleve) eleve.nom = e.target.value;
+                renderAllEvaluationTables();
+                triggerSave();
+            }
+
+            function handleEvalChange(e) {
+                const { eleveId, sectionId, critIndex } = e.target.dataset;
+                evaluations[`${eleveId}-${sectionId}-${critIndex}`] = e.target.value;
+                triggerSave();
+            }
+
+            function handleObsChange(e) {
+                const { eleveId, sectionId } = e.target.dataset;
+                evaluations[`${eleveId}-${sectionId}-obs`] = e.target.value;
+                triggerSave();
+            }
+            
+            function addEleve() {
+                const nom = prompt("Nom du nouvel élève:");
+                if (!nom) return;
+                const newId = eleves.length > 0 ? Math.max(...eleves.map(e => e.id)) + 1 : 1;
+                eleves.push({ id: newId, nom });
+                renderAllEvaluationTables();
+                triggerSave();
+            }
+
+            function resetData() {
+                if (confirm('Êtes-vous sûr de vouloir tout réinitialiser (élèves, évaluations) ?')) {
+                    eleves = [ { id: 1, nom: "Élève Individuel 1" }, { id: 2, nom: "Élève Individuel 2" } ];
+                    evaluations = {};
+                    initializeEvaluations();
+                    renderUI();
+                    triggerSave();
+                }
+            }
+
+            function exportCsv() {
+                const emojiMapping = { "✅": "Réussite autonome", "🟩": "Réussite avec aide", "🟧": "Réussite partielle", "🟥": "Non réussi", "ABS": "Absent", "NE": "Non Évalué" };
+                let csvContent = `Élève,Section,Critère,Référence,Évaluation Emoji,Évaluation Texte,Observations\n`;
+                eleves.forEach(eleve => {
+                    modelConfig.sections.forEach(section => {
+                        const allCriterias = section.competences.flatMap(c => c.criterias);
+                        const observation = evaluations[`${eleve.id}-${section.id}-obs`] || '';
+                        allCriterias.forEach((crit, critIndex) => {
+                            const emoji = evaluations[`${eleve.id}-${section.id}-${critIndex}`] || '';
+                            const row = [`"${eleve.nom}"`, `"${section.title}"`, `"${crit.text}"`, `"${crit.ref || ''}"`, emoji, emojiMapping[emoji] || '', `"${observation}"`];
+                            csvContent += row.join(',') + '\n';
+                        });
+                    });
+                });
+                downloadFile(csvContent, 'evaluations.csv', 'text/csv;charset=utf-8;');
+            }
+            
+            function processImportCsv(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = e => {
+                    const lines = e.target.result.split('\n').slice(1);
+                    const newEleves = [];
+                    lines.forEach(line => {
+                        const nom = line.split(',')[0].trim().replace(/"/g, '');
+                        if (nom) newEleves.push({ nom });
+                    });
+                    if (confirm(`Importer ${newEleves.length} élèves ? Cela remplacera la liste actuelle.`)) {
+                        eleves = newEleves.map((el, i) => ({ ...el, id: i + 1 }));
+                        renderAllEvaluationTables();
+                        triggerSave();
+                    }
+                };
+                reader.readAsText(file);
+            }
+
+            // --- IMPORT/EXPORT JSON DE DONNÉES ---
+            function exportDataAsJson() {
+                const dataToExport = {
+                    eleves: eleves,
+                    evaluations: evaluations,
+                    source: "FicheEvaluationInteractiveUnifiée",
+                    version: "2.1",
+                    exportDate: new Date().toISOString()
+                };
+                const jsonString = JSON.stringify(dataToExport, null, 2);
+                downloadFile(jsonString, 'evaluation_donnees.json', 'application/json');
+            }
+
+            function processJsonImport(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = e => {
+                    try {
+                        const data = JSON.parse(e.target.result);
+                        if (data.eleves && typeof data.evaluations === 'object') {
+                            if (confirm("Importer ce fichier va écraser les données actuelles (élèves et évaluations). Continuer ?")) {
+                                eleves = data.eleves;
+                                evaluations = data.evaluations;
+                                initializeEvaluations();
+                                renderUI();
+                                triggerSave();
+                                alert('Données importées avec succès !');
+                            }
+                        } else {
+                            alert('Fichier JSON invalide. Les propriétés "eleves" et "evaluations" sont requises.');
+                        }
+                    } catch (error) {
+                        alert('Erreur lors de la lecture du fichier JSON. Est-il bien formé ?');
+                        console.error(error);
+                    }
+                };
+                reader.readAsText(file);
+                event.target.value = ''; // Reset input
+            }
+
+            // --- UTILITAIRES ---
+            const createDOMElement = (tag, className, html, attributes = {}) => {
+                const el = document.createElement(tag);
+                if (className) el.className = className;
+                if (html) el.innerHTML = html;
+                Object.entries(attributes).forEach(([key, value]) => el.setAttribute(key, value));
+                return el;
+            };
+
+            const downloadFile = (content, fileName, contentType) => {
+                const bom = new Uint8Array([0xEF, 0xBB, 0xBF]);
+                const blob = new Blob([bom, content], { type: contentType });
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = fileName;
+                a.click();
+                URL.revokeObjectURL(a.href);
+            };
+
+            const triggerSave = () => {
+                updateAutosaveStatus(false);
+                setTimeout(saveDataToLocalStorage, 1000);
+            };
+
+            const updateAutosaveStatus = (saved = false) => {
+                if (!autosaveEnabled) { dom.autosaveStatusEl.textContent = 'Sauvegarde auto désactivée'; return; }
+                dom.autosaveStatusEl.textContent = saved ? `Sauvegardé à ${new Date().toLocaleTimeString()}` : 'Sauvegarde...';
+            };
+            
+            function initializeEvaluations() {
+                 modelConfig.sections.forEach(section => {
+                    const allCriterias = section.competences.flatMap(c => c.criterias);
+                    eleves.forEach(eleve => {
+                        allCriterias.forEach((crit, critIndex) => {
+                            const key = `${eleve.id}-${section.id}-${critIndex}`;
+                            if (!(key in evaluations)) evaluations[key] = '';
+                        });
+                        const obsKey = `${eleve.id}-${section.id}-obs`;
+                        if (!(obsKey in evaluations)) evaluations[obsKey] = '';
+                    });
+                });
+            }
+
+            // --- MODE CONFIGURATION ---
+            function toggleEditMode() {
+                editMode = !editMode;
+                dom.editModePanel.style.display = editMode ? 'flex' : 'none';
+                document.getElementById('toggleEditMode').classList.toggle('active', editMode);
+                renderUI();
+            }
+
+            function addEditControls(element, type, ...ids) {
+                const controls = createDOMElement('span', 'edit-controls');
+                const editBtn = createDOMElement('button', 'edit-btn', '✏️', { title: 'Modifier' });
+                editBtn.onclick = (e) => { e.stopPropagation(); openEditModal('edit', type, ...ids); };
+                controls.appendChild(editBtn);
+
+                const deleteBtn = createDOMElement('button', 'delete-btn', '🗑️', { title: 'Supprimer' });
+                deleteBtn.onclick = (e) => { e.stopPropagation(); deleteItem(type, ...ids); };
+                controls.appendChild(deleteBtn);
+
+                if (type === 'section' || type === 'competence') {
+                    const addBtn = createDOMElement('button', 'add-btn', '➕', { title: 'Ajouter en dessous' });
+                    addBtn.onclick = (e) => { e.stopPropagation(); openEditModal('add', type === 'section' ? 'competence' : 'criteria', ...ids); };
+                    controls.appendChild(addBtn);
+                }
+                element.appendChild(controls);
+            }
+            
+            function openEditModal(mode, type, ...args) {
+                currentEditContext = { mode, type, args };
+                let title = '', body = '', item = {};
+
+                if (mode === 'edit') {
+                    if (type === 'section') item = modelConfig.sections.find(s => s.id === args[0]);
+                    else if (type === 'competence') item = modelConfig.sections.find(s => s.id === args[0])?.competences.find(c => c.id === args[1]);
+                    else if (type === 'criteria') item = modelConfig.sections.find(s => s.id === args[0])?.competences.find(c => c.id === args[1])?.criterias[args[2]];
+                    else if (type === 'header') item = {title: modelConfig.title, subtitle: modelConfig.subtitle, mainCardHeader: modelConfig.mainCardHeader};
+                }
+
+                switch(type) {
+                    case 'header':
+                        title = 'Modifier les en-têtes';
+                        body = `
+                            <div class="config-form-group"><label>Titre principal</label><input type="text" id="modalInputTitle" value="${item.title || ''}"></div>
+                            <div class="config-form-group"><label>Sous-titre</label><input type="text" id="modalInputSubtitle" value="${item.subtitle || ''}"></div>
+                            <div class="config-form-group"><label>Titre de la structure</label><input type="text" id="modalInputCardHeader" value="${item.mainCardHeader || ''}"></div>`;
+                        break;
+                    case 'section':
+                        title = `${mode === 'edit' ? 'Modifier' : 'Ajouter'} une section`;
+                        body = `
+                            <div class="config-form-group"><label>Titre de la section</label><input type="text" id="modalInputTitle" value="${item.title || ''}"></div>
+                            <div class="config-form-group"><label>Description (HTML permis)</label><textarea id="modalInputDesc">${item.description || ''}</textarea></div>`;
+                        break;
+                    case 'competence':
+                         title = `${mode === 'edit' ? 'Modifier' : 'Ajouter'} une compétence`;
+                         body = `<div class="config-form-group"><label>Titre de la compétence</label><input type="text" id="modalInputTitle" value="${item.title || ''}"></div>`;
+                        break;
+                    case 'criteria':
+                        title = `${mode === 'edit' ? 'Modifier' : 'Ajouter'} un critère`;
+                        body = `
+                            <div class="config-form-group"><label>Texte du critère</label><input type="text" id="modalInputText" value="${item.text || ''}"></div>
+                            <div class="config-form-group"><label>Référence</label><input type="text" id="modalInputRef" value="${item.ref || ''}"></div>`;
+                        break;
+                }
+
+                dom.modalTitle.textContent = title;
+                dom.modalBody.innerHTML = body;
+                dom.modal.style.display = 'flex';
+            }
+
+            function saveModalChanges() {
+                if (!currentEditContext) return;
+                const { mode, type, args } = currentEditContext;
+
+                switch (type) {
+                    case 'header':
+                        modelConfig.title = document.getElementById('modalInputTitle').value;
+                        modelConfig.subtitle = document.getElementById('modalInputSubtitle').value;
+                        modelConfig.mainCardHeader = document.getElementById('modalInputCardHeader').value;
+                        break;
+                    case 'section':
+                        const title = document.getElementById('modalInputTitle').value;
+                        const desc = document.getElementById('modalInputDesc').value;
+                        if (mode === 'edit') {
+                            const section = modelConfig.sections.find(s => s.id === args[0]);
+                            if (section) { section.title = title; section.description = desc; }
+                        } else { // add
+                            modelConfig.sections.push({ id: `section_${Date.now()}`, title, description: desc, competences: [] });
+                        }
+                        break;
+                    case 'competence': {
+                        const compTitle = document.getElementById('modalInputTitle').value;
+                        const section = modelConfig.sections.find(s => s.id === args[0]);
+                        if (!section) return;
+                        if (mode === 'edit') {
+                            const comp = section.competences.find(c => c.id === args[1]);
+                            if (comp) comp.title = compTitle;
+                        } else { // add
+                            section.competences.push({ id: `comp_${Date.now()}`, title: compTitle, criterias: [] });
+                        }
+                        break;
+                    }
+                    case 'criteria': {
+                        const text = document.getElementById('modalInputText').value;
+                        const ref = document.getElementById('modalInputRef').value;
+                        const section = modelConfig.sections.find(s => s.id === args[0]);
+                        const comp = section?.competences.find(c => c.id === args[1]);
+                        if (!comp) return;
+                        if (mode === 'edit') {
+                            comp.criterias[args[2]] = { text, ref };
+                        } else { // add
+                            comp.criterias.push({ text, ref });
+                        }
+                        break;
+                    }
+                }
+                
+                closeModal();
+                renderUI();
+                saveModelToLocalStorage();
+                triggerSave();
+            }
+            
+            function deleteItem(type, ...args) {
+                 if (!confirm(`Êtes-vous sûr de vouloir supprimer cet élément : ${type} ?`)) return;
+                 switch(type) {
+                    case 'section':
+                        modelConfig.sections = modelConfig.sections.filter(s => s.id !== args[0]);
+                        break;
+                    case 'competence': {
+                        const section = modelConfig.sections.find(s => s.id === args[0]);
+                        if (section) section.competences = section.competences.filter(c => c.id !== args[1]);
+                        break;
+                    }
+                    case 'criteria': {
+                        const comp = modelConfig.sections.find(s => s.id === args[0])?.competences.find(c => c.id === args[1]);
+                        if (comp) comp.criterias.splice(args[2], 1);
+                        break;
+                    }
+                 }
+                renderUI();
+                saveModelToLocalStorage();
+                triggerSave();
+            }
+
+            function closeModal() {
+                dom.modal.style.display = 'none';
+                currentEditContext = null;
+            }
+
+            // --- ATTACHER LES ÉVÉNEMENTS ---
+            function attachEventListeners() {
+                document.getElementById('toggleEditMode').addEventListener('click', toggleEditMode);
+                document.getElementById('exitEditModeBtn').addEventListener('click', toggleEditMode);
+                document.getElementById('addSectionBtn').addEventListener('click', () => openEditModal('add', 'section'));
+                
+                dom.mainTitle.onclick = () => editMode && openEditModal('edit', 'header');
+                dom.subTitle.onclick = () => editMode && openEditModal('edit', 'header');
+
+                document.getElementById('addEleve').addEventListener('click', addEleve);
+                document.getElementById('resetData').addEventListener('click', resetData);
+                document.getElementById('exportCsv').addEventListener('click', exportCsv);
+                document.getElementById('importCsv').addEventListener('click', () => document.getElementById('importFileInput').click());
+                document.getElementById('importFileInput').addEventListener('change', processImportCsv);
+
+                // Import/Export Données JSON
+                document.getElementById('exportJsonData').addEventListener('click', exportDataAsJson);
+                document.getElementById('importJsonData').addEventListener('click', () => document.getElementById('importJsonInput').click());
+                document.getElementById('importJsonInput').addEventListener('change', processJsonImport);
+
+                // Sauvegarde / Chargement Modèle
+                const editModelArea = document.getElementById('editModelArea');
+                document.getElementById('saveModelBtn').addEventListener('click', () => {
+                    document.getElementById('modelConfigCode').value = btoa(JSON.stringify(modelConfig));
+                    editModelArea.style.display = 'block';
+                });
+                document.getElementById('loadModelBtn').addEventListener('click', () => editModelArea.style.display = 'block');
+                document.getElementById('copyModelConfig').addEventListener('click', e => {
+                    navigator.clipboard.writeText(document.getElementById('modelConfigCode').value);
+                    e.target.textContent = 'Copié !'; setTimeout(() => e.target.textContent = 'Copier la configuration', 2000);
+                });
+                document.getElementById('applyModelConfig').addEventListener('click', () => {
+                    if(!confirm("Appliquer cette configuration écrasera le modèle actuel. Continuer ?")) return;
+                    try {
+                        const newConfig = JSON.parse(atob(document.getElementById('modelConfigCode').value));
+                        if(newConfig.sections) {
+                            modelConfig = newConfig; initializeEvaluations(); renderUI();
+                            saveModelToLocalStorage(); editModelArea.style.display = 'none';
+                        }
+                    } catch(e) { alert('Code de configuration invalide.'); }
+                });
+
+                // Modal
+                dom.modal.addEventListener('click', e => { if (e.target === dom.modal) closeModal(); });
+                document.getElementById('modalCancel').addEventListener('click', closeModal);
+                document.getElementById('modalSave').addEventListener('click', saveModalChanges);
+                document.querySelector('.close-modal').addEventListener('click', closeModal);
+            }
+
+            // Démarrage
+            init();
+        });
+    </script>
+</body>
+</html>

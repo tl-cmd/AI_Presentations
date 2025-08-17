@@ -1,0 +1,2351 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FICHE ACTIVITÉ ÉLÈVE — BAC PRO CIEL (Ultimate Edition)</title>
+<meta name="color-scheme" content="light dark">
+<style>
+/* ========================================
+   Variables & Thème Ultimate
+   ======================================== */
+:root {
+  /* Light theme - Pro et lisible */
+  --bg: #ffffff;
+  --panel: #ffffff;
+  --surface: #f8fafc;
+  --ink: #0f172a;
+  --muted: #64748b;
+  --accent: #2563eb;
+  --accent-2: #8b5cf6;
+  --success: #22c55e;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --border: #e2e8f0;
+  --radius: 12px;
+  --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+  --ring: 0 0 0 3px rgba(37, 99, 235, 0.2);
+  
+  /* Niveaux de compétences */
+  --niveau-na: #ef4444;
+  --niveau-ec: #fb923c;
+  --niveau-ac: #22c55e;
+  --niveau-mt: #10b981;
+}
+
+[data-theme="dark"] {
+  /* Dark theme VRAIMENT LISIBLE cette fois */
+  --bg: #0a0e1a;
+  --panel: #111827;
+  --surface: #1f2937;
+  --ink: #f3f4f6;
+  --muted: #9ca3af;
+  --accent: #60a5fa;
+  --accent-2: #a78bfa;
+  --success: #34d399;
+  --warning: #fbbf24;
+  --danger: #f87171;
+  --border: #374151;
+  --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.4);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.5);
+  --ring: 0 0 0 3px rgba(96, 165, 250, 0.3);
+}
+
+/* ========================================
+   Reset & Base
+   ======================================== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.6;
+  transition: background 0.3s, color 0.3s;
+  min-height: 100vh;
+}
+
+/* ========================================
+   Animations fluides
+   ======================================== */
+@keyframes slideIn {
+  from { transform: translateY(10px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.animate-in {
+  animation: slideIn 0.3s ease-out;
+}
+
+/* ========================================
+   Header Sticky Pro
+   ======================================== */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: color-mix(in srgb, var(--panel) 95%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+.header-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 12px 20px;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.brand {
+  font-weight: 900;
+  font-size: 18px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  color: var(--accent);
+}
+
+.badges {
+  display: flex;
+  gap: 10px;
+  flex: 1;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.badge {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 13px;
+}
+
+.badge-label {
+  font-size: 11px;
+  color: var(--muted);
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+/* ========================================
+   Boutons Ultimate
+   ======================================== */
+.btn {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  padding: 8px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-lg);
+}
+
+.btn.primary {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+
+.btn.success {
+  background: var(--success);
+  color: white;
+  border-color: var(--success);
+}
+
+.btn.warning {
+  background: var(--warning);
+  color: white;
+  border-color: var(--warning);
+}
+
+.btn.danger {
+  background: var(--danger);
+  color: white;
+  border-color: var(--danger);
+}
+
+.btn.tiny {
+  padding: 4px 8px;
+  font-size: 12px;
+}
+
+.toolbar {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* ========================================
+   Mode Badge Flottant
+   ======================================== */
+.mode-badge {
+  position: fixed;
+  top: 10px;
+  right: 20px;
+  z-index: 200;
+  background: var(--accent);
+  color: white;
+  font-weight: 900;
+  font-size: 12px;
+  border-radius: 999px;
+  padding: 8px 14px;
+  box-shadow: var(--shadow-lg);
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.mode-badge:hover {
+  transform: scale(1.05);
+}
+
+.mode-badge.prof {
+  background: var(--danger);
+}
+
+/* ========================================
+   Container & Sections
+   ======================================== */
+.container {
+  max-width: 1400px;
+  margin: 20px auto 60px;
+  padding: 0 20px;
+}
+
+.section {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  margin-bottom: 20px;
+  overflow: hidden;
+  animation: slideIn 0.3s ease-out;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(135deg, var(--surface), var(--panel));
+}
+
+.section-title {
+  font-size: 18px;
+  font-weight: 900;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  color: var(--accent);
+}
+
+.section-body {
+  padding: 20px;
+}
+
+/* ========================================
+   Inputs & Forms
+   ======================================== */
+.input {
+  background: var(--surface);
+  color: var(--ink);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 14px;
+  outline: none;
+  width: 100%;
+  transition: all 0.2s;
+}
+
+.input:focus {
+  border-color: var(--accent);
+  box-shadow: var(--ring);
+  background: var(--panel);
+}
+
+.editable {
+  background: color-mix(in srgb, var(--warning) 10%, var(--surface));
+  border: 2px dashed var(--warning);
+  border-radius: 8px;
+  padding: 6px 10px;
+  min-height: 28px;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.editable:focus {
+  border-style: solid;
+  border-color: var(--accent);
+  box-shadow: var(--ring);
+  background: var(--panel);
+}
+
+/* ========================================
+   Grid System
+   ======================================== */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+@media (max-width: 768px) {
+  .grid-2 { grid-template-columns: 1fr; }
+}
+
+/* ========================================
+   Parties (Cards)
+   ======================================== */
+.part {
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-left: 6px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 20px;
+  transition: all 0.3s;
+  position: relative;
+}
+
+.part.validated {
+  border-left-color: var(--success);
+  background: color-mix(in srgb, var(--success) 5%, var(--surface));
+}
+
+.part.locked {
+  opacity: 0.6;
+  pointer-events: none;
+  position: relative;
+}
+
+.part.locked::after {
+  content: '🔒 Partie verrouillée - Validez la partie précédente';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--panel);
+  padding: 12px 20px;
+  border-radius: 8px;
+  border: 2px solid var(--border);
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.part-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--border);
+}
+
+.part-title {
+  font-size: 20px;
+  font-weight: 900;
+  color: var(--accent);
+}
+
+.part-meta {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.meta-tag {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  padding: 4px 10px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.validation-badge {
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.validation-badge.pending {
+  background: var(--warning);
+  color: white;
+}
+
+.validation-badge.validated {
+  background: var(--success);
+  color: white;
+}
+
+/* ========================================
+   Questions
+   ======================================== */
+.question {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 16px;
+  transition: all 0.2s;
+}
+
+.question:hover {
+  box-shadow: var(--shadow);
+}
+
+.question-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.question-type {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 900;
+  color: white;
+  text-transform: uppercase;
+}
+
+.type-text { background: #3b82f6; }
+.type-qroc { background: #4b5563; }
+.type-qcm { background: #8b5cf6; }
+.type-vf { background: #06b6d4; }
+.type-code { background: #10b981; }
+.type-capture { background: #f59e0b; }
+.type-ordre { background: #0ea5e9; }
+.type-scale { background: #f43f5e; }
+
+.question-text {
+  font-size: 15px;
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+
+.question-text code {
+  background: var(--surface);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'Consolas', 'Monaco', monospace;
+  font-size: 13px;
+  color: var(--accent);
+}
+
+/* ========================================
+   Answer Fields
+   ======================================== */
+.answer-field {
+  background: var(--panel);
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  padding: 14px;
+  min-height: 120px;
+  outline: none;
+  transition: all 0.2s;
+  line-height: 1.6;
+}
+
+.answer-field:focus {
+  border-color: var(--accent);
+  box-shadow: var(--ring);
+  background: var(--surface);
+}
+
+.answer-field:empty::before {
+  content: attr(data-placeholder);
+  color: var(--muted);
+  font-style: italic;
+}
+
+.answer-field img {
+  max-width: 100%;
+  border-radius: 8px;
+  margin: 10px 0;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+}
+
+.code-editor {
+  font-family: 'Consolas', 'Monaco', monospace;
+  background: color-mix(in srgb, var(--surface) 50%, var(--panel));
+  min-height: 150px;
+  font-size: 13px;
+  tab-size: 2;
+}
+
+/* ========================================
+   QCM & Options
+   ======================================== */
+.qcm-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 12px 0;
+}
+
+.qcm-option {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.qcm-option:hover {
+  transform: translateX(4px);
+  border-color: var(--accent);
+  box-shadow: var(--shadow);
+}
+
+.qcm-option input[type="radio"],
+.qcm-option input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+/* ========================================
+   Drag & Drop
+   ======================================== */
+.sortable {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.draggable {
+  padding: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: grab;
+  transition: all 0.2s;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.draggable:active {
+  cursor: grabbing;
+}
+
+.draggable.dragging {
+  opacity: 0.5;
+  transform: scale(0.95);
+}
+
+.drag-handle {
+  color: var(--muted);
+  font-size: 18px;
+}
+
+/* ========================================
+   Évaluation Compétences
+   ======================================== */
+.evaluation-zone {
+  background: linear-gradient(135deg, 
+    color-mix(in srgb, var(--accent) 10%, var(--surface)),
+    color-mix(in srgb, var(--success) 10%, var(--surface))
+  );
+  border: 2px solid var(--accent);
+  border-radius: 12px;
+  padding: 16px;
+  margin-top: 20px;
+}
+
+.evaluation-zone.validated {
+  border-color: var(--success);
+  background: linear-gradient(135deg,
+    color-mix(in srgb, var(--success) 15%, var(--surface)),
+    color-mix(in srgb, var(--success) 5%, var(--surface))
+  );
+}
+
+.competence-eval {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px;
+  margin: 12px 0;
+}
+
+.competence-code {
+  font-weight: 900;
+  color: var(--accent);
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+
+.niveau-selector {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.niveau-btn {
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 2px solid var(--border);
+  background: var(--surface);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 800;
+  transition: all 0.2s;
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.niveau-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+.niveau-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.niveau-btn.active {
+  transform: scale(1.05);
+  box-shadow: var(--shadow-lg);
+}
+
+.niveau-btn.na { border-color: var(--niveau-na); color: var(--niveau-na); }
+.niveau-btn.na.active { background: var(--niveau-na); color: white; }
+.niveau-btn.ec { border-color: var(--niveau-ec); color: var(--niveau-ec); }
+.niveau-btn.ec.active { background: var(--niveau-ec); color: white; }
+.niveau-btn.ac { border-color: var(--niveau-ac); color: var(--niveau-ac); }
+.niveau-btn.ac.active { background: var(--niveau-ac); color: white; }
+.niveau-btn.mt { border-color: var(--niveau-mt); color: var(--niveau-mt); }
+.niveau-btn.mt.active { background: var(--niveau-mt); color: white; }
+
+/* ========================================
+   Chips
+   ======================================== */
+.chips {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.chip {
+  background: var(--accent);
+  color: white;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.chip:hover {
+  transform: scale(1.05);
+  box-shadow: var(--shadow);
+}
+
+.chip.editable {
+  background: var(--accent-2);
+}
+
+/* ========================================
+   Modals
+   ======================================== */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  align-items: center;
+  justify-content: center;
+}
+
+.modal.show {
+  display: flex;
+  animation: slideIn 0.3s ease-out;
+}
+
+.modal-content {
+  background: var(--panel);
+  border-radius: var(--radius);
+  padding: 24px;
+  width: 90%;
+  max-width: 600px;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-lg);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--border);
+}
+
+.modal-title {
+  font-size: 22px;
+  font-weight: 900;
+  color: var(--accent);
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 28px;
+  cursor: pointer;
+  color: var(--muted);
+  transition: all 0.2s;
+}
+
+.modal-close:hover {
+  color: var(--danger);
+  transform: scale(1.2);
+}
+
+.modal-body {
+  margin-bottom: 20px;
+}
+
+.modal-footer {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+/* ========================================
+   Signatures Canvas
+   ======================================== */
+.signature-pad {
+  border: 2px dashed var(--border);
+  border-radius: 10px;
+  background: var(--panel);
+  width: 100%;
+  max-width: 500px;
+  height: 150px;
+  cursor: crosshair;
+  touch-action: none;
+}
+
+.signature-tools {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+/* ========================================
+   Toast Notifications
+   ======================================== */
+.toast {
+  position: fixed;
+  top: 80px;
+  right: 20px;
+  background: var(--success);
+  color: white;
+  border-radius: 12px;
+  padding: 14px 20px;
+  box-shadow: var(--shadow-lg);
+  font-weight: 700;
+  display: none;
+  z-index: 1200;
+  animation: slideIn 0.3s ease-out;
+}
+
+.toast.show {
+  display: block;
+}
+
+.toast.error { background: var(--danger); }
+.toast.warning { background: var(--warning); }
+.toast.info { background: var(--accent); }
+
+/* ========================================
+   Save Indicator
+   ======================================== */
+.save-indicator {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 12px 16px;
+  border-radius: 999px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  font-size: 13px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.3s;
+  pointer-events: none;
+  z-index: 900;
+  box-shadow: var(--shadow-lg);
+}
+
+.save-indicator.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.save-indicator.saving {
+  background: var(--warning);
+  color: white;
+  border-color: var(--warning);
+}
+
+.save-indicator.saved {
+  background: var(--success);
+  color: white;
+  border-color: var(--success);
+}
+
+.save-indicator.error {
+  background: var(--danger);
+  color: white;
+  border-color: var(--danger);
+}
+
+/* ========================================
+   Teacher Mode
+   ======================================== */
+.teacher-only {
+  display: none;
+}
+
+.teacher-mode .teacher-only {
+  display: inline-flex;
+}
+
+.teacher-mode .editable {
+  background: color-mix(in srgb, var(--warning) 20%, var(--surface));
+  cursor: text;
+}
+
+/* ========================================
+   Print Styles
+   ======================================== */
+@media print {
+  .header,
+  .mode-badge,
+  .toolbar,
+  .btn,
+  .toast,
+  .save-indicator,
+  .teacher-only {
+    display: none !important;
+  }
+  
+  body {
+    background: white;
+    color: black;
+  }
+  
+  .section,
+  .part {
+    box-shadow: none;
+    border: 1px solid #ddd;
+    break-inside: avoid;
+  }
+  
+  @page {
+    margin: 15mm;
+  }
+}
+
+/* ========================================
+   Responsive
+   ======================================== */
+@media (max-width: 768px) {
+  .header-content {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .badges {
+    justify-content: flex-start;
+  }
+  
+  .toolbar {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .modal-content {
+    width: 95%;
+    padding: 16px;
+  }
+}
+
+/* ========================================
+   Utilities
+   ======================================== */
+.text-center { text-align: center; }
+.text-muted { color: var(--muted); }
+.mt-1 { margin-top: 8px; }
+.mt-2 { margin-top: 16px; }
+.mt-3 { margin-top: 24px; }
+.mb-1 { margin-bottom: 8px; }
+.mb-2 { margin-bottom: 16px; }
+.mb-3 { margin-bottom: 24px; }
+.gap-1 { gap: 8px; }
+.gap-2 { gap: 16px; }
+.gap-3 { gap: 24px; }
+</style>
+</head>
+<body data-theme="light">
+
+<!-- Mode Badge Flottant -->
+<div class="mode-badge" id="modeBadge" title="Cliquer pour changer de mode">
+  🎓 Mode Élève
+</div>
+
+<!-- Header Sticky -->
+<header class="header">
+  <div class="header-content">
+    <div class="brand">
+      📘 <span>Fiche Activité — BAC PRO CIEL</span>
+    </div>
+    
+    <div class="badges">
+      <div class="badge">
+        <span class="badge-label">Activité</span>
+        <span class="editable" contenteditable="false" data-field="title">Installation WSL & Linux CLI</span>
+      </div>
+      <div class="badge">
+        <span class="badge-label">Élève</span>
+        <input id="studentName" class="input" placeholder="NOM Prénom" style="width:160px;border:none;background:transparent;">
+      </div>
+      <div class="badge">
+        <span class="badge-label">Classe</span>
+        <span class="editable" contenteditable="false" data-field="class">1CIEL</span>
+      </div>
+      <div class="badge">
+        <span class="badge-label">Date</span>
+        <span id="dateField"></span>
+      </div>
+    </div>
+    
+    <div class="toolbar">
+      <button class="btn" id="themeBtn">🌓 Thème</button>
+      <button class="btn primary" id="saveBtn">💾 Sauvegarder</button>
+      <button class="btn success" id="exportBtn">📤 Export JSON</button>
+      <button class="btn" id="exportCsvBtn">📊 Export CSV</button>
+      <button class="btn warning" id="printBtn">🖨️ PDF</button>
+      <button class="btn danger teacher-only" id="resetBtn">🗑️ Reset</button>
+    </div>
+  </div>
+</header>
+
+<!-- Save Indicator -->
+<div class="save-indicator" id="saveIndicator">
+  <span class="save-icon">💾</span>
+  <span class="save-text">Sauvegarde automatique</span>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- Container Principal -->
+<div class="container">
+  
+  <!-- Section Contexte -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">🎯 Contexte & Objectifs</div>
+    </div>
+    <div class="section-body">
+      <div class="grid">
+        <div>
+          <strong>📋 Contexte</strong>
+          <div class="editable mt-1" contenteditable="false" data-field="contexte">
+            Tu es technicien·ne junior dans une entreprise qui migre progressivement vers Linux. 
+            Tu dois maîtriser l'installation de WSL2 et les commandes de base.
+          </div>
+        </div>
+        <div>
+          <strong>❓ Problématique</strong>
+          <div class="editable mt-1" contenteditable="false" data-field="problematique">
+            Comment installer et configurer un environnement Linux sous Windows pour être opérationnel rapidement ?
+          </div>
+        </div>
+        <div>
+          <strong>🎯 Objectifs pédagogiques</strong>
+          <div id="objectifsChips" class="chips"></div>
+          <button class="btn tiny primary teacher-only mt-1" onclick="addChip('objectifs')">➕ Ajouter</button>
+        </div>
+        <div>
+          <strong>📚 Ressources</strong>
+          <div id="ressourcesChips" class="chips"></div>
+          <button class="btn tiny primary teacher-only mt-1" onclick="addChip('ressources')">➕ Ajouter</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Section Déroulé -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">🧭 Déroulé des activités</div>
+      <button class="btn primary teacher-only" onclick="addPart()">➕ Ajouter une partie</button>
+    </div>
+    <div class="section-body" id="partsContainer">
+      <!-- Les parties seront générées ici -->
+    </div>
+  </div>
+  
+  <!-- Section Synthèse -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">🧩 Synthèse & Conclusion</div>
+    </div>
+    <div class="section-body">
+      <div class="answer-field" contenteditable data-placeholder="Explique en quelques lignes ce que tu as appris et comment cela répond à la problématique..." data-answer="synthesis"></div>
+      
+      <div class="grid-2 mt-3">
+        <div>
+          <strong>Signature élève</strong>
+          <canvas id="signatureEleve" class="signature-pad"></canvas>
+          <div class="signature-tools">
+            <button class="btn tiny" onclick="clearSignature('signatureEleve')">Effacer</button>
+          </div>
+        </div>
+        <div>
+          <strong>Visa professeur</strong>
+          <canvas id="signatureProf" class="signature-pad"></canvas>
+          <div class="signature-tools teacher-only">
+            <button class="btn tiny" onclick="clearSignature('signatureProf')">Effacer</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+</div>
+
+<!-- Modal Ajout Question -->
+<div class="modal" id="questionModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 class="modal-title">➕ Ajouter une question</h3>
+      <button class="modal-close" onclick="closeModal('questionModal')">×</button>
+    </div>
+    <div class="modal-body">
+      <label style="display:block;margin-bottom:8px;font-weight:600;">Type de question</label>
+      <select id="questionType" class="input" onchange="updateQuestionPreview()">
+        <option value="text">📝 Texte libre</option>
+        <option value="qroc">📄 Réponse courte</option>
+        <option value="qcm">☑️ QCM (choix unique)</option>
+        <option value="qcm-multi">✅ QCM (choix multiples)</option>
+        <option value="vf">⚖️ Vrai/Faux</option>
+        <option value="code">💻 Code</option>
+        <option value="capture">📸 Capture d'écran</option>
+        <option value="ordre">🔀 Ordre/Tri</option>
+        <option value="scale">📊 Échelle/Note</option>
+      </select>
+      
+      <label style="display:block;margin:16px 0 8px;font-weight:600;">Énoncé de la question</label>
+      <textarea id="questionEnonce" class="input" rows="3" placeholder="Quelle commande permet de..."></textarea>
+      
+      <div id="questionOptionsContainer" style="display:none;margin-top:16px;">
+        <label style="display:block;margin-bottom:8px;font-weight:600;">Options (une par ligne)</label>
+        <textarea id="questionOptions" class="input" rows="4" placeholder="Option 1&#10;Option 2&#10;Option 3"></textarea>
+      </div>
+      
+      <div style="margin-top:16px;padding:12px;background:var(--surface);border-radius:8px;border:1px solid var(--border);">
+        <strong>Aperçu :</strong>
+        <div id="questionPreview" style="margin-top:8px;"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('questionModal')">Annuler</button>
+      <button class="btn primary" onclick="confirmAddQuestion()">Ajouter la question</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Mot de passe -->
+<div class="modal" id="passwordModal">
+  <div class="modal-content" style="max-width:400px;">
+    <div class="modal-header">
+      <h3 class="modal-title">🔐 Authentification Professeur</h3>
+      <button class="modal-close" onclick="closeModal('passwordModal')">×</button>
+    </div>
+    <div class="modal-body">
+      <label style="display:block;margin-bottom:8px;font-weight:600;">Mot de passe</label>
+      <input type="password" id="passwordInput" class="input" placeholder="••••••••">
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('passwordModal')">Annuler</button>
+      <button class="btn primary" onclick="checkPassword()">Valider</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ================================================
+// FICHE ACTIVITÉ ULTIMATE - BAC PRO CIEL
+// Version: Ultimate Edition
+// Author: Tom
+// ================================================
+
+// Configuration & État
+const APP_VERSION = 'ultimate-1.0';
+const STORAGE_KEY = 'fiche_ciel_ultimate';
+
+// État de l'application
+let appState = {
+  theme: localStorage.getItem('theme') || 'light',
+  mode: 'student', // 'student' ou 'teacher'
+  isDirty: false,
+  currentPartId: null,
+  data: {
+    title: 'Installation WSL & Linux CLI',
+    class: '1CIEL',
+    studentName: '',
+    contexte: '',
+    problematique: '',
+    objectifs: ['Installer WSL2', 'Maîtriser 10 commandes Linux', 'Configurer SSH', 'Gérer les droits'],
+    ressources: ['Support de cours', 'VM Debian', 'Fiche commandes', 'Documentation officielle'],
+    parts: [],
+    answers: {},
+    signatures: {}
+  }
+};
+
+// Référentiel BAC PRO CIEL
+const REFERENTIEL = {
+  C01: 'COMMUNIQUER EN SITUATION PROFESSIONNELLE',
+  C03: 'PARTICIPER À UN PROJET',
+  C04: 'ANALYSER UNE STRUCTURE MATÉRIELLE OU LOGICIELLE',
+  C06: 'VALIDER LA CONFORMITÉ D\'UNE INSTALLATION',
+  C09: 'INSTALLER LES ÉLÉMENTS D\'UN SYSTÈME',
+  C10: 'EXPLOITER UN RÉSEAU INFORMATIQUE',
+  C11: 'ASSURER LA CYBERSÉCURITÉ D\'UNE INFRASTRUCTURE'
+};
+
+const NIVEAUX = {
+  na: { label: 'Non acquis', emoji: '🟥', color: '#ef4444' },
+  ec: { label: 'En cours', emoji: '🟧', color: '#fb923c' },
+  ac: { label: 'Acquis', emoji: '🟩', color: '#22c55e' },
+  mt: { label: 'Maîtrisé', emoji: '✅', color: '#10b981' }
+};
+
+// ================================================
+// Helpers & Utils
+// ================================================
+
+const $ = selector => document.querySelector(selector);
+const $$ = selector => document.querySelectorAll(selector);
+const uid = () => Math.random().toString(36).substr(2, 9);
+
+// Le mot de passe est encodé pour éviter qu'il soit trop visible
+const ENCODED_SECRET = 'Y2llbDIwMjU='; // 🤫
+
+// Debounce pour l'autosave
+const debounce = (func, wait) => {
+  let timeout;
+  return (...args) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func.apply(this, args), wait);
+  };
+};
+
+// Toast notifications
+function showToast(message, type = 'info', duration = 3000) {
+  const toast = $('#toast');
+  toast.textContent = message;
+  toast.className = `toast show ${type}`;
+  setTimeout(() => toast.classList.remove('show'), duration);
+}
+
+// Save indicator
+function showSaveIndicator(status) {
+  const indicator = $('#saveIndicator');
+  const text = indicator.querySelector('.save-text');
+  
+  indicator.className = `save-indicator show ${status}`;
+  
+  switch(status) {
+    case 'saving':
+      text.textContent = 'Sauvegarde en cours...';
+      break;
+    case 'saved':
+      text.textContent = 'Sauvegardé';
+      setTimeout(() => indicator.classList.remove('show'), 2000);
+      break;
+    case 'error':
+      text.textContent = 'Erreur de sauvegarde';
+      setTimeout(() => indicator.classList.remove('show'), 3000);
+      break;
+  }
+}
+
+// ================================================
+// Sauvegarde & Chargement
+// ================================================
+
+function saveState() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+    appState.isDirty = false;
+    showSaveIndicator('saved');
+  } catch (e) {
+    console.error('Erreur de sauvegarde:', e);
+    showSaveIndicator('error');
+  }
+}
+
+const autoSave = debounce(saveState, 1000);
+
+function markDirty() {
+  appState.isDirty = true;
+  showSaveIndicator('saving');
+  autoSave();
+}
+
+function loadState() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      const loaded = JSON.parse(saved);
+      appState = { ...appState, ...loaded };
+    }
+  } catch (e) {
+    console.error('Erreur de chargement:', e);
+  }
+}
+
+// ================================================
+// Thème & Mode
+// ================================================
+
+function applyTheme() {
+  document.body.setAttribute('data-theme', appState.theme);
+}
+
+function toggleTheme() {
+  appState.theme = appState.theme === 'light' ? 'dark' : 'light';
+  localStorage.setItem('theme', appState.theme);
+  applyTheme();
+  markDirty();
+}
+
+function applyMode() {
+  const badge = $('#modeBadge');
+  const editables = $$('.editable');
+  
+  if (appState.mode === 'teacher') {
+    badge.textContent = '👨‍🏫 Mode Prof';
+    badge.classList.add('prof');
+    document.body.classList.add('teacher-mode');
+    editables.forEach(el => el.contentEditable = 'true');
+  } else {
+    badge.textContent = '🎓 Mode Élève';
+    badge.classList.remove('prof');
+    document.body.classList.remove('teacher-mode');
+    editables.forEach(el => el.contentEditable = 'false');
+  }
+}
+
+function toggleMode() {
+  if (appState.mode === 'teacher') {
+    appState.mode = 'student';
+    applyMode();
+    showToast('Mode Élève activé', 'info');
+  } else {
+    showModal('passwordModal');
+    $('#passwordInput').focus();
+  }
+}
+
+function checkPassword() {
+  const input = $('#passwordInput').value;
+  const encoded = btoa(input);
+  
+  if (encoded === ENCODED_SECRET) {
+    appState.mode = 'teacher';
+    applyMode();
+    closeModal('passwordModal');
+    showToast('🎉 Mode Professeur activé !', 'success');
+    $('#passwordInput').value = '';
+  } else {
+    showToast('❌ Mot de passe incorrect', 'error');
+    $('#passwordInput').value = '';
+  }
+}
+
+// ================================================
+// Modals
+// ================================================
+
+function showModal(modalId) {
+  $(`#${modalId}`).classList.add('show');
+}
+
+function closeModal(modalId) {
+  $(`#${modalId}`).classList.remove('show');
+}
+
+// ================================================
+// Parties & Questions
+// ================================================
+
+function initDefaultParts() {
+  if (appState.data.parts.length === 0) {
+    appState.data.parts = [
+      {
+        id: uid(),
+        title: 'Partie 1 : Installation et configuration WSL2',
+        duration: '1h30',
+        competences: ['C09', 'C10'],
+        questions: [
+          {
+            id: uid(),
+            type: 'text',
+            enonce: 'Active la virtualisation Windows et installe WSL2. Documente les commandes utilisées.'
+          },
+          {
+            id: uid(),
+            type: 'capture',
+            enonce: 'Vérifie l\'installation avec `wsl -l -v` et prends une capture d\'écran.'
+          },
+          {
+            id: uid(),
+            type: 'qcm',
+            enonce: 'Quel est le système de fichiers par défaut de Linux ?',
+            options: ['NTFS', 'ext4', 'FAT32', 'APFS']
+          }
+        ],
+        validated: false,
+        evaluations: {}
+      },
+      {
+        id: uid(),
+        title: 'Partie 2 : Découverte de la CLI Linux',
+        duration: '2h',
+        competences: ['C01', 'C06'],
+        questions: [
+          {
+            id: uid(),
+            type: 'qroc',
+            enonce: 'Quelle commande affiche le répertoire courant ?'
+          },
+          {
+            id: uid(),
+            type: 'vf',
+            enonce: 'La commande `sudo rm -rf /` est sans danger.'
+          },
+          {
+            id: uid(),
+            type: 'code',
+            enonce: 'Écris un script bash qui affiche "Hello World" et la date du jour.'
+          },
+          {
+            id: uid(),
+            type: 'ordre',
+            enonce: 'Ordonne ces étapes pour configurer SSH :',
+            options: ['Générer une clé SSH', 'Copier la clé publique', 'Tester la connexion', 'Configurer ssh-agent']
+          }
+        ],
+        validated: false,
+        evaluations: {}
+      }
+    ];
+  }
+}
+
+function renderParts() {
+  const container = $('#partsContainer');
+  container.innerHTML = '';
+  
+  appState.data.parts.forEach((part, index) => {
+    const isLocked = index > 0 && !appState.data.parts[index - 1].validated;
+    const partEl = createPartElement(part, index, isLocked);
+    container.appendChild(partEl);
+  });
+  
+  bindPartEvents();
+}
+
+function createPartElement(part, index, isLocked) {
+  const div = document.createElement('div');
+  div.className = `part ${part.validated ? 'validated' : ''} ${isLocked ? 'locked' : ''}`;
+  div.dataset.partId = part.id;
+  
+  div.innerHTML = `
+    <div class="part-header">
+      <div class="part-title" ${appState.mode === 'teacher' ? 'contenteditable="true"' : ''}>${part.title}</div>
+      <div class="part-meta">
+        <span class="meta-tag">⏱️ ${part.duration}</span>
+        <span class="meta-tag">📊 ${part.competences.join(', ')}</span>
+        <span class="validation-badge ${part.validated ? 'validated' : 'pending'}">
+          ${part.validated ? '✅ Validée' : '⏳ En attente'}
+        </span>
+        <button class="btn tiny danger teacher-only" onclick="removePart('${part.id}')">✖️ Supprimer</button>
+      </div>
+    </div>
+    
+    <div class="questions-container">
+      ${part.questions.map((q, i) => renderQuestion(q, part.id, i)).join('')}
+    </div>
+    
+    <button class="btn tiny primary teacher-only" onclick="openQuestionModal('${part.id}')">➕ Ajouter une question</button>
+    
+    ${renderEvaluationZone(part)}
+  `;
+  
+  return div;
+}
+
+function renderQuestion(question, partId, index) {
+  const answerId = `${partId}:${question.id}`;
+  const savedAnswer = appState.data.answers[answerId] || '';
+  
+  let typeLabel = '';
+  let typeClass = '';
+  let answerHtml = '';
+  
+  switch(question.type) {
+    case 'text':
+      typeLabel = '📝 Texte';
+      typeClass = 'type-text';
+      answerHtml = `
+        <div class="answer-field" contenteditable 
+             data-placeholder="Ta réponse détaillée..." 
+             data-answer="${answerId}">${savedAnswer}</div>
+      `;
+      break;
+      
+    case 'qroc':
+      typeLabel = '📄 Court';
+      typeClass = 'type-qroc';
+      answerHtml = `
+        <input class="input" placeholder="Réponse courte" 
+               data-answer="${answerId}" value="${savedAnswer}">
+      `;
+      break;
+      
+    case 'qcm':
+      typeLabel = '☑️ QCM';
+      typeClass = 'type-qcm';
+      answerHtml = `
+        <div class="qcm-options">
+          ${(question.options || []).map((opt, i) => `
+            <label class="qcm-option">
+              <input type="radio" name="${answerId}" value="${i}" 
+                     ${savedAnswer == i ? 'checked' : ''}>
+              <span>${opt}</span>
+            </label>
+          `).join('')}
+        </div>
+      `;
+      break;
+      
+    case 'vf':
+      typeLabel = '⚖️ V/F';
+      typeClass = 'type-vf';
+      answerHtml = `
+        <div class="qcm-options">
+          <label class="qcm-option">
+            <input type="radio" name="${answerId}" value="true" 
+                   ${savedAnswer === 'true' ? 'checked' : ''}>
+            <span>✅ Vrai</span>
+          </label>
+          <label class="qcm-option">
+            <input type="radio" name="${answerId}" value="false" 
+                   ${savedAnswer === 'false' ? 'checked' : ''}>
+            <span>❌ Faux</span>
+          </label>
+        </div>
+      `;
+      break;
+      
+    case 'code':
+      typeLabel = '💻 Code';
+      typeClass = 'type-code';
+      answerHtml = `
+        <textarea class="answer-field code-editor" 
+                  data-placeholder="// Ton code ici..." 
+                  data-answer="${answerId}">${savedAnswer}</textarea>
+      `;
+      break;
+      
+    case 'capture':
+      typeLabel = '📸 Capture';
+      typeClass = 'type-capture';
+      answerHtml = `
+        <div class="answer-field" contenteditable 
+             data-placeholder="Colle ta capture (Ctrl+V) ou glisse une image..." 
+             data-answer="${answerId}">${savedAnswer}</div>
+      `;
+      break;
+      
+    case 'ordre':
+      typeLabel = '🔀 Ordre';
+      typeClass = 'type-ordre';
+      const items = savedAnswer ? JSON.parse(savedAnswer) : question.options || [];
+      answerHtml = `
+        <div class="sortable" data-answer="${answerId}">
+          ${items.map(item => `
+            <div class="draggable" draggable="true">
+              <span class="drag-handle">☰</span>
+              <span>${item}</span>
+            </div>
+          `).join('')}
+        </div>
+      `;
+      break;
+      
+    case 'scale':
+      typeLabel = '📊 Échelle';
+      typeClass = 'type-scale';
+      answerHtml = `
+        <div style="display:flex;align-items:center;gap:12px;">
+          <span>0</span>
+          <input type="range" class="input" min="0" max="10" 
+                 value="${savedAnswer || 5}" data-answer="${answerId}" 
+                 style="flex:1;">
+          <span>10</span>
+          <output>${savedAnswer || 5}</output>
+        </div>
+      `;
+      break;
+  }
+  
+  return `
+    <div class="question" data-question-id="${question.id}">
+      <div class="question-header">
+        <span class="question-type ${typeClass}">${typeLabel} - Q${index + 1}</span>
+        <div class="teacher-only">
+          <button class="btn tiny" onclick="editQuestion('${partId}', '${question.id}')">✏️</button>
+          <button class="btn tiny danger" onclick="removeQuestion('${partId}', '${question.id}')">✖️</button>
+        </div>
+      </div>
+      <div class="question-text">${question.enonce}</div>
+      ${answerHtml}
+    </div>
+  `;
+}
+
+function renderEvaluationZone(part) {
+  return `
+    <div class="evaluation-zone ${part.validated ? 'validated' : ''}">
+      <h4 style="margin-bottom:12px;">📊 Évaluation des compétences</h4>
+      ${part.competences.map(code => `
+        <div class="competence-eval">
+          <div class="competence-code">${code} - ${REFERENTIEL[code] || ''}</div>
+          <div class="niveau-selector">
+            ${Object.entries(NIVEAUX).map(([key, niveau]) => {
+              const isActive = part.evaluations[code] === key;
+              return `
+                <button class="niveau-btn ${key} ${isActive ? 'active' : ''}"
+                        onclick="setNiveau('${part.id}', '${code}', '${key}')"
+                        ${appState.mode !== 'teacher' ? 'disabled' : ''}>
+                  ${niveau.emoji} ${niveau.label}
+                </button>
+              `;
+            }).join('')}
+          </div>
+        </div>
+      `).join('')}
+      
+      <button class="btn success teacher-only mt-2" onclick="validatePart('${part.id}')">
+        ✅ Valider cette partie
+      </button>
+    </div>
+  `;
+}
+
+// ================================================
+// Actions Parties & Questions
+// ================================================
+
+function addPart() {
+  const newPart = {
+    id: uid(),
+    title: `Partie ${appState.data.parts.length + 1} : Nouvelle activité`,
+    duration: '45 min',
+    competences: ['C01'],
+    questions: [],
+    validated: false,
+    evaluations: {}
+  };
+  
+  appState.data.parts.push(newPart);
+  renderParts();
+  markDirty();
+  showToast('➕ Nouvelle partie ajoutée', 'success');
+}
+
+function removePart(partId) {
+  if (!confirm('Supprimer cette partie et toutes ses questions ?')) return;
+  
+  appState.data.parts = appState.data.parts.filter(p => p.id !== partId);
+  renderParts();
+  markDirty();
+  showToast('✖️ Partie supprimée', 'warning');
+}
+
+function validatePart(partId) {
+  const part = appState.data.parts.find(p => p.id === partId);
+  if (!part) return;
+  
+  // Vérifier que toutes les compétences sont évaluées
+  const allEvaluated = part.competences.every(code => part.evaluations[code]);
+  
+  if (!allEvaluated) {
+    showToast('⚠️ Évaluez toutes les compétences avant de valider', 'warning');
+    return;
+  }
+  
+  part.validated = true;
+  part.validatedAt = new Date().toISOString();
+  renderParts();
+  markDirty();
+  showToast('✅ Partie validée !', 'success');
+}
+
+function setNiveau(partId, competence, niveau) {
+  if (appState.mode !== 'teacher') return;
+  
+  const part = appState.data.parts.find(p => p.id === partId);
+  if (!part) return;
+  
+  // Toggle si on clique sur le même niveau
+  if (part.evaluations[competence] === niveau) {
+    delete part.evaluations[competence];
+  } else {
+    part.evaluations[competence] = niveau;
+  }
+  
+  renderParts();
+  markDirty();
+}
+
+let tempPartId = null;
+
+function openQuestionModal(partId) {
+  tempPartId = partId;
+  showModal('questionModal');
+  $('#questionType').value = 'text';
+  $('#questionEnonce').value = '';
+  $('#questionOptions').value = '';
+  updateQuestionPreview();
+}
+
+function updateQuestionPreview() {
+  const type = $('#questionType').value;
+  const enonce = $('#questionEnonce').value || 'Votre question ici...';
+  const preview = $('#questionPreview');
+  const optionsContainer = $('#questionOptionsContainer');
+  
+  // Afficher/masquer les options selon le type
+  const needsOptions = ['qcm', 'qcm-multi', 'ordre'].includes(type);
+  optionsContainer.style.display = needsOptions ? 'block' : 'none';
+  
+  // Générer l'aperçu
+  let html = `<div style="margin-bottom:8px;font-weight:600;">${enonce}</div>`;
+  
+  switch(type) {
+    case 'text':
+      html += `<div style="border:2px dashed var(--border);padding:12px;border-radius:8px;color:var(--muted);">Zone de texte libre...</div>`;
+      break;
+    case 'qroc':
+      html += `<input class="input" placeholder="Réponse courte" disabled>`;
+      break;
+    case 'qcm':
+    case 'qcm-multi':
+      const options = $('#questionOptions').value.split('\n').filter(o => o.trim());
+      const inputType = type === 'qcm' ? 'radio' : 'checkbox';
+      html += options.length ? options.map(opt => `
+        <div style="margin:4px 0;">
+          <input type="${inputType}" disabled> ${opt}
+        </div>
+      `).join('') : '<div style="color:var(--muted);">Ajoutez des options...</div>';
+      break;
+    case 'vf':
+      html += `<div><input type="radio" disabled> Vrai</div><div><input type="radio" disabled> Faux</div>`;
+      break;
+    case 'code':
+      html += `<div style="font-family:monospace;background:var(--surface);padding:8px;border-radius:6px;">// Code ici...</div>`;
+      break;
+    case 'capture':
+      html += `<div style="border:2px dashed var(--border);padding:20px;text-align:center;border-radius:6px;">📸 Zone de capture</div>`;
+      break;
+    case 'ordre':
+      const items = $('#questionOptions').value.split('\n').filter(o => o.trim());
+      html += items.length ? items.map(item => `
+        <div style="margin:4px 0;padding:8px;background:var(--surface);border:1px solid var(--border);border-radius:6px;">
+          ☰ ${item}
+        </div>
+      `).join('') : '<div style="color:var(--muted);">Ajoutez des éléments à ordonner...</div>';
+      break;
+    case 'scale':
+      html += `<input type="range" min="0" max="10" style="width:100%;" disabled>`;
+      break;
+  }
+  
+  preview.innerHTML = html;
+}
+
+function confirmAddQuestion() {
+  const type = $('#questionType').value;
+  const enonce = $('#questionEnonce').value.trim();
+  
+  if (!enonce) {
+    showToast('⚠️ L\'énoncé est requis', 'warning');
+    return;
+  }
+  
+  const part = appState.data.parts.find(p => p.id === tempPartId);
+  if (!part) return;
+  
+  const question = {
+    id: uid(),
+    type: type,
+    enonce: enonce
+  };
+  
+  // Ajouter les options si nécessaire
+  if (['qcm', 'qcm-multi', 'ordre'].includes(type)) {
+    const options = $('#questionOptions').value.split('\n')
+      .map(o => o.trim())
+      .filter(o => o);
+    
+    if (options.length === 0) {
+      showToast('⚠️ Ajoutez au moins une option', 'warning');
+      return;
+    }
+    
+    question.options = options;
+  }
+  
+  part.questions.push(question);
+  renderParts();
+  markDirty();
+  closeModal('questionModal');
+  showToast('➕ Question ajoutée', 'success');
+}
+
+function removeQuestion(partId, questionId) {
+  if (!confirm('Supprimer cette question ?')) return;
+  
+  const part = appState.data.parts.find(p => p.id === partId);
+  if (!part) return;
+  
+  part.questions = part.questions.filter(q => q.id !== questionId);
+  renderParts();
+  markDirty();
+  showToast('✖️ Question supprimée', 'warning');
+}
+
+// ================================================
+// Chips (Objectifs & Ressources)
+// ================================================
+
+function renderChips() {
+  const objectifsContainer = $('#objectifsChips');
+  const ressourcesContainer = $('#ressourcesChips');
+  
+  objectifsContainer.innerHTML = appState.data.objectifs.map((obj, i) => `
+    <span class="chip ${appState.mode === 'teacher' ? 'editable' : ''}" 
+          onclick="editChip('objectifs', ${i})">
+      🎯 ${obj}
+    </span>
+  `).join('');
+  
+  ressourcesContainer.innerHTML = appState.data.ressources.map((res, i) => `
+    <span class="chip ${appState.mode === 'teacher' ? 'editable' : ''}" 
+          onclick="editChip('ressources', ${i})">
+      📚 ${res}
+    </span>
+  `).join('');
+}
+
+function addChip(type) {
+  const value = prompt(`Nouvel ${type === 'objectifs' ? 'objectif' : 'ressource'} :`);
+  if (!value || !value.trim()) return;
+  
+  appState.data[type].push(value.trim());
+  renderChips();
+  markDirty();
+  showToast(`➕ ${type === 'objectifs' ? 'Objectif' : 'Ressource'} ajouté(e)`, 'success');
+}
+
+function editChip(type, index) {
+  if (appState.mode !== 'teacher') return;
+  
+  const current = appState.data[type][index];
+  const value = prompt(`Modifier (vide pour supprimer) :`, current);
+  
+  if (value === null) return;
+  
+  if (value.trim() === '') {
+    appState.data[type].splice(index, 1);
+    showToast('✖️ Supprimé', 'warning');
+  } else {
+    appState.data[type][index] = value.trim();
+    showToast('✏️ Modifié', 'success');
+  }
+  
+  renderChips();
+  markDirty();
+}
+
+// ================================================
+// Signatures Canvas
+// ================================================
+
+function initSignatures() {
+  ['signatureEleve', 'signatureProf'].forEach(id => {
+    const canvas = $(`#${id}`);
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    
+    // Ajuster pour les écrans haute résolution
+    const scale = window.devicePixelRatio || 1;
+    canvas.width = canvas.offsetWidth * scale;
+    canvas.height = canvas.offsetHeight * scale;
+    ctx.scale(scale, scale);
+    
+    let isDrawing = false;
+    let lastX = 0;
+    let lastY = 0;
+    
+    function startDrawing(e) {
+      isDrawing = true;
+      const rect = canvas.getBoundingClientRect();
+      const pos = e.touches ? e.touches[0] : e;
+      lastX = pos.clientX - rect.left;
+      lastY = pos.clientY - rect.top;
+    }
+    
+    function draw(e) {
+      if (!isDrawing) return;
+      e.preventDefault();
+      
+      const rect = canvas.getBoundingClientRect();
+      const pos = e.touches ? e.touches[0] : e;
+      const x = pos.clientX - rect.left;
+      const y = pos.clientY - rect.top;
+      
+      ctx.beginPath();
+      ctx.moveTo(lastX, lastY);
+      ctx.lineTo(x, y);
+      ctx.strokeStyle = getComputedStyle(document.body).getPropertyValue('--accent');
+      ctx.lineWidth = 2;
+      ctx.lineCap = 'round';
+      ctx.stroke();
+      
+      lastX = x;
+      lastY = y;
+    }
+    
+    function stopDrawing() {
+      if (isDrawing) {
+        isDrawing = false;
+        saveSignature(id);
+      }
+    }
+    
+    // Events souris
+    canvas.addEventListener('mousedown', startDrawing);
+    canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('mouseup', stopDrawing);
+    canvas.addEventListener('mouseleave', stopDrawing);
+    
+    // Events tactiles
+    canvas.addEventListener('touchstart', startDrawing);
+    canvas.addEventListener('touchmove', draw);
+    canvas.addEventListener('touchend', stopDrawing);
+    
+    // Restaurer signature sauvegardée
+    if (appState.data.signatures[id]) {
+      const img = new Image();
+      img.onload = () => {
+        ctx.drawImage(img, 0, 0, canvas.width / scale, canvas.height / scale);
+      };
+      img.src = appState.data.signatures[id];
+    }
+  });
+}
+
+function saveSignature(canvasId) {
+  const canvas = $(`#${canvasId}`);
+  appState.data.signatures[canvasId] = canvas.toDataURL();
+  markDirty();
+}
+
+function clearSignature(canvasId) {
+  const canvas = $(`#${canvasId}`);
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  delete appState.data.signatures[canvasId];
+  markDirty();
+  showToast('🗑️ Signature effacée', 'info');
+}
+
+// ================================================
+// Binding Events
+// ================================================
+
+function bindPartEvents() {
+  // Contenteditable pour les titres de partie
+  $$('.part-title[contenteditable="true"]').forEach(el => {
+    el.addEventListener('blur', () => {
+      const partId = el.closest('.part').dataset.partId;
+      const part = appState.data.parts.find(p => p.id === partId);
+      if (part) {
+        part.title = el.textContent;
+        markDirty();
+      }
+    });
+  });
+  
+  // Answer fields text
+  $$('.answer-field[contenteditable]').forEach(el => {
+    el.addEventListener('input', () => {
+      appState.data.answers[el.dataset.answer] = el.innerHTML;
+      markDirty();
+    });
+  });
+  
+  // Textareas
+  $$('textarea[data-answer]').forEach(el => {
+    el.addEventListener('input', () => {
+      appState.data.answers[el.dataset.answer] = el.value;
+      markDirty();
+    });
+  });
+  
+  // Inputs
+  $$('input[data-answer]').forEach(el => {
+    el.addEventListener('input', () => {
+      appState.data.answers[el.dataset.answer] = el.value;
+      
+      // Update output pour les ranges
+      if (el.type === 'range') {
+        const output = el.parentElement.querySelector('output');
+        if (output) output.textContent = el.value;
+      }
+      
+      markDirty();
+    });
+  });
+  
+  // Radio buttons
+  $$('input[type="radio"]').forEach(el => {
+    el.addEventListener('change', () => {
+      appState.data.answers[el.name] = el.value;
+      markDirty();
+    });
+  });
+  
+  // Checkboxes (multi-select)
+  $$('input[type="checkbox"][name]').forEach(el => {
+    el.addEventListener('change', () => {
+      const name = el.name;
+      const checkboxes = $$(`input[type="checkbox"][name="${name}"]`);
+      const values = [];
+      checkboxes.forEach(cb => {
+        if (cb.checked) values.push(cb.value);
+      });
+      appState.data.answers[name] = values;
+      markDirty();
+    });
+  });
+  
+  // Drag & Drop pour ordre
+  $$('.sortable').forEach(container => {
+    let draggedElement = null;
+    
+    container.addEventListener('dragstart', e => {
+      if (e.target.classList.contains('draggable')) {
+        draggedElement = e.target;
+        e.target.style.opacity = '0.5';
+        e.dataTransfer.effectAllowed = 'move';
+      }
+    });
+    
+    container.addEventListener('dragend', e => {
+      if (e.target.classList.contains('draggable')) {
+        e.target.style.opacity = '';
+      }
+    });
+    
+    container.addEventListener('dragover', e => {
+      e.preventDefault();
+      const afterElement = getDragAfterElement(container, e.clientY);
+      if (afterElement == null) {
+        container.appendChild(draggedElement);
+      } else {
+        container.insertBefore(draggedElement, afterElement);
+      }
+    });
+    
+    container.addEventListener('drop', e => {
+      e.preventDefault();
+      const items = [...container.querySelectorAll('.draggable span:last-child')];
+      const order = items.map(item => item.textContent);
+      appState.data.answers[container.dataset.answer] = JSON.stringify(order);
+      markDirty();
+    });
+  });
+  
+  // Collage d'images dans les captures
+  document.addEventListener('paste', handlePaste);
+}
+
+function getDragAfterElement(container, y) {
+  const draggableElements = [...container.querySelectorAll('.draggable:not(.dragging)')];
+  
+  return draggableElements.reduce((closest, child) => {
+    const box = child.getBoundingClientRect();
+    const offset = y - box.top - box.height / 2;
+    
+    if (offset < 0 && offset > closest.offset) {
+      return { offset: offset, element: child };
+    } else {
+      return closest;
+    }
+  }, { offset: Number.NEGATIVE_INFINITY }).element;
+}
+
+function handlePaste(e) {
+  const target = e.target;
+  if (!target.classList.contains('answer-field')) return;
+  
+  const items = e.clipboardData?.items;
+  if (!items) return;
+  
+  for (const item of items) {
+    if (item.type.startsWith('image/')) {
+      e.preventDefault();
+      const file = item.getAsFile();
+      const reader = new FileReader();
+      
+      reader.onload = event => {
+        const img = document.createElement('img');
+        img.src = event.target.result;
+        img.style.maxWidth = '100%';
+        img.style.borderRadius = '8px';
+        img.style.marginTop = '8px';
+        img.style.cursor = 'pointer';
+        img.onclick = () => window.open(img.src, '_blank');
+        
+        target.appendChild(img);
+        appState.data.answers[target.dataset.answer] = target.innerHTML;
+        markDirty();
+        showToast('📸 Image ajoutée', 'success');
+      };
+      
+      reader.readAsDataURL(file);
+      break;
+    }
+  }
+}
+
+// ================================================
+// Export / Import
+// ================================================
+
+function exportJSON() {
+  const exportData = {
+    version: APP_VERSION,
+    date: new Date().toISOString(),
+    metadata: {
+      student: appState.data.studentName,
+      class: appState.data.class,
+      activity: appState.data.title
+    },
+    content: {
+      contexte: appState.data.contexte,
+      problematique: appState.data.problematique,
+      objectifs: appState.data.objectifs,
+      ressources: appState.data.ressources
+    },
+    parts: appState.data.parts,
+    answers: appState.data.answers,
+    signatures: appState.data.signatures
+  };
+  
+  const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `fiche_${appState.data.studentName || 'eleve'}_${new Date().toISOString().slice(0, 10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  
+  showToast('💾 Export JSON réussi', 'success');
+}
+
+function exportCSV() {
+  // Export des évaluations
+  let csvEval = 'Élève,Classe,Activité,Partie,Compétence,Niveau,Validé,Date\n';
+  
+  appState.data.parts.forEach(part => {
+    Object.entries(part.evaluations).forEach(([code, niveau]) => {
+      csvEval += `"${appState.data.studentName}","${appState.data.class}","${appState.data.title}",`;
+      csvEval += `"${part.title}","${code}","${NIVEAUX[niveau]?.label || ''}",`;
+      csvEval += `"${part.validated ? 'Oui' : 'Non'}","${part.validatedAt || ''}"\n`;
+    });
+  });
+  
+  // Export des réponses
+  let csvAnswers = 'Question,Réponse\n';
+  
+  Object.entries(appState.data.answers).forEach(([key, value]) => {
+    csvAnswers += `"${key}","${String(value).replace(/"/g, '""')}"\n`;
+  });
+  
+  // Télécharger les deux CSV
+  const downloadCSV = (content, filename) => {
+    const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+  
+  downloadCSV(csvEval, `evaluations_${new Date().toISOString().slice(0, 10)}.csv`);
+  downloadCSV(csvAnswers, `reponses_${new Date().toISOString().slice(0, 10)}.csv`);
+  
+  showToast('📊 Export CSV réussi', 'success');
+}
+
+// ================================================
+// Initialisation
+// ================================================
+
+function init() {
+  // Charger l'état sauvegardé
+  loadState();
+  
+  // Appliquer thème et mode
+  applyTheme();
+  applyMode();
+  
+  // Date du jour
+  $('#dateField').textContent = new Date().toLocaleDateString('fr-FR');
+  
+  // Restaurer les données
+  $('#studentName').value = appState.data.studentName || '';
+  
+  // Editables
+  $$('.editable[data-field]').forEach(el => {
+    const field = el.dataset.field;
+    if (appState.data[field]) {
+      el.textContent = appState.data[field];
+    }
+  });
+  
+  // Initialiser les parties par défaut si nécessaire
+  initDefaultParts();
+  
+  // Render
+  renderChips();
+  renderParts();
+  
+  // Init signatures
+  initSignatures();
+  
+  // Bind global events
+  bindGlobalEvents();
+  
+  // Autosave toutes les 30 secondes
+  setInterval(() => {
+    if (appState.isDirty) {
+      saveState();
+    }
+  }, 30000);
+  
+  showToast(`✨ Fiche v${APP_VERSION} prête !`, 'success', 2000);
+}
+
+function bindGlobalEvents() {
+  // Header buttons
+  $('#modeBadge').addEventListener('click', toggleMode);
+  $('#themeBtn').addEventListener('click', toggleTheme);
+  $('#saveBtn').addEventListener('click', saveState);
+  $('#exportBtn').addEventListener('click', exportJSON);
+  $('#exportCsvBtn').addEventListener('click', exportCSV);
+  $('#printBtn').addEventListener('click', () => window.print());
+  $('#resetBtn')?.addEventListener('click', () => {
+    if (confirm('⚠️ Réinitialiser toutes les données ?')) {
+      localStorage.removeItem(STORAGE_KEY);
+      location.reload();
+    }
+  });
+  
+  // Student name
+  $('#studentName').addEventListener('input', e => {
+    appState.data.studentName = e.target.value;
+    markDirty();
+  });
+  
+  // Editable fields
+  $$('.editable').forEach(el => {
+    el.addEventListener('blur', () => {
+      const field = el.dataset.field;
+      if (field) {
+        appState.data[field] = el.textContent;
+        markDirty();
+      }
+    });
+  });
+  
+  // Password modal Enter key
+  $('#passwordInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') checkPassword();
+  });
+  
+  // Question modal updates
+  $('#questionType').addEventListener('change', updateQuestionPreview);
+  $('#questionEnonce').addEventListener('input', updateQuestionPreview);
+  $('#questionOptions').addEventListener('input', updateQuestionPreview);
+  
+  // Prevent closing on unsaved changes
+  window.addEventListener('beforeunload', e => {
+    if (appState.isDirty) {
+      e.preventDefault();
+      e.returnValue = '';
+    }
+  });
+  
+  // Keyboard shortcuts
+  document.addEventListener('keydown', e => {
+    if (e.ctrlKey || e.metaKey) {
+      switch(e.key) {
+        case 's':
+          e.preventDefault();
+          saveState();
+          break;
+        case 'e':
+          e.preventDefault();
+          exportJSON();
+          break;
+        case 'p':
+          e.preventDefault();
+          window.print();
+          break;
+        case 't':
+          e.preventDefault();
+          toggleTheme();
+          break;
+      }
+    }
+  });
+}
+
+// ================================================
+// Start App
+// ================================================
+
+document.addEventListener('DOMContentLoaded', init);
+
+// Expose functions pour les onclick inline
+window.toggleTheme = toggleTheme;
+window.toggleMode = toggleMode;
+window.checkPassword = checkPassword;
+window.showModal = showModal;
+window.closeModal = closeModal;
+window.addPart = addPart;
+window.removePart = removePart;
+window.validatePart = validatePart;
+window.setNiveau = setNiveau;
+window.openQuestionModal = openQuestionModal;
+window.updateQuestionPreview = updateQuestionPreview;
+window.confirmAddQuestion = confirmAddQuestion;
+window.removeQuestion = removeQuestion;
+window.editQuestion = (partId, questionId) => {
+  // TODO: Implémenter l'édition de question
+  showToast('🚧 Fonction en développement', 'info');
+};
+window.addChip = addChip;
+window.editChip = editChip;
+window.clearSignature = clearSignature;
+</script>
+
+</body>
+</html>

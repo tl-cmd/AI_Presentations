@@ -1,0 +1,1952 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fiche Séquence — BAC PRO CIEL | Version ULTIMATE</title>
+  <meta name="description" content="Fiche séquence interactive ULTIMATE — Sélection souple U↔C, autosave robuste, export JSON/CSV/PDF, thème clair/sombre.">
+  
+  <style>
+    /* ===== OPUS V3 DESIGN SYSTEM ===== */
+    :root {
+      --radius-outer: 18px;
+      --radius: 14px;
+      --radius-sm: 10px;
+      --shadow: 0 10px 30px rgba(0,0,0,.18);
+      --ring: 0 0 0 3px rgba(79,124,255,.25);
+      --tr: 180ms ease;
+      --tr-fast: 120ms ease;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      --font: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans";
+    }
+    
+    :root[data-theme="light"] {
+      --bg: #f6f8ff;
+      --bg-soft: #eef2ff;
+      --panel: #ffffff;
+      --panel-2: #f6f8ff;
+      --text: #162039;
+      --muted: #5a6b94;
+      --border: rgba(17,41,104,.12);
+      --chip: #f1f5ff;
+      --chip-on: #e7eeff;
+      --primary: #2f6bff;
+      --primary-2: #4e86ff;
+      --accent: #ffb02e;
+      --ok: #16a34a;
+      --warn: #ea9800;
+      --bad: #e11d48;
+      --header-fg: #0f1a33;
+      --header-bg: rgba(255,255,255,.95);
+      --header-bg-scrolled: #ffffff;
+      --header-border: rgba(17,41,104,.18);
+      --header-shadow: 0 6px 20px rgba(20,30,60,.10);
+      --subtitle: #33456f;
+      --gradient: radial-gradient(1200px 600px at 80% -10%, rgba(99,120,255,.10), transparent 60%),
+                  radial-gradient(900px 600px at -5% 5%, rgba(255,176,46,.10), transparent 50%);
+    }
+    
+    :root[data-theme="dark"] {
+      --bg: #0b1324;
+      --bg-soft: #091022;
+      --panel: #111a33;
+      --panel-2: #0e1833;
+      --text: #eaf0ff;
+      --muted: #9aabd2;
+      --border: rgba(255,255,255,.10);
+      --chip: #141f3f;
+      --chip-on: #1b2b58;
+      --primary: #6aa4ff;
+      --primary-2: #88b9ff;
+      --accent: #ffc857;
+      --ok: #22c55e;
+      --warn: #f59e0b;
+      --bad: #ef4444;
+      --header-fg: #eff4ff;
+      --header-bg: rgba(12,19,36,.92);
+      --header-bg-scrolled: rgba(12,19,36,.98);
+      --header-border: rgba(255,255,255,.12);
+      --header-shadow: 0 6px 20px rgba(0,0,0,.28);
+      --subtitle: #b9c6e8;
+      --gradient: radial-gradient(1200px 600px at 80% -10%, rgba(99,120,255,.18), transparent 60%),
+                  radial-gradient(900px 600px at -5% 5%, rgba(255,176,46,.14), transparent 50%);
+    }
+    
+    /* ===== GLOBAL ===== */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+      font: 500 15px/1.55 var(--font);
+      color: var(--text);
+      background: var(--bg);
+      background-image: var(--gradient);
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      min-height: 100vh;
+    }
+    
+    /* ===== HEADER ===== */
+    .header {
+      background: var(--panel);
+      border-radius: var(--radius-outer);
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow);
+      display: grid;
+      grid-template-columns: 120px 1fr 280px; /* colonne 1 conservée (espace neutre) */
+      gap: 16px;
+      align-items: center;
+    }
+    
+    .logo {
+      width: 100%;
+      height: 100px;
+      border: 2px dashed var(--border);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      font-size: 12px;
+      text-align: center;
+    }
+
+    /* Variante neutre : logo retiré sans modifier la grille ni la hauteur */
+    .logo.removed {
+      border: none;
+      color: transparent;
+      background: transparent;
+    }
+    
+    .h1 {
+      font-size: 26px;
+      color: var(--primary);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .badge {
+      background: var(--primary-2);
+      color: #fff;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 14px;
+    }
+    
+    .meta {
+      background: var(--panel-2);
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    
+    .meta strong { color: var(--text); }
+    .subtitle { color: var(--muted); font-size: 14px; }
+    
+    /* ===== MAIN CONTAINER ===== */
+    .main {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    /* ===== CARDS ===== */
+    .card {
+      background: var(--panel);
+      border-radius: var(--radius-outer);
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow);
+    }
+    
+    /* ===== GRID & METRICS ===== */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+    
+    .metric {
+      background: var(--panel-2);
+      border-radius: 12px;
+      padding: 16px;
+      position: relative;
+      overflow: hidden;
+      transition: transform var(--tr), box-shadow var(--tr);
+    }
+    
+    .metric:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow);
+    }
+    
+    .metric:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: var(--primary);
+    }
+    
+    .metric.accent:before { background: var(--accent); }
+    .metric.success:before { background: var(--ok); }
+    .metric.warning:before { background: var(--warn); }
+    
+    .metric-label {
+      font-size: 12px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+    
+    .metric-value {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.2;
+    }
+    
+    /* ===== EDITABLE ===== */
+    .editable {
+      border-bottom: 1px dashed var(--border);
+      padding: 2px 4px;
+      transition: all var(--tr);
+      display: inline-block;
+      min-width: 50px;
+    }
+    
+    .editable:hover {
+      background: rgba(255,183,77,.1);
+      border-color: var(--accent);
+    }
+    
+    .editable:focus {
+      outline: none;
+      background: rgba(255,183,77,.2);
+      border-color: var(--accent);
+      border-bottom-width: 2px;
+    }
+    
+    /* ===== TIMELINE ===== */
+    .timeline-wrap {
+      background: var(--panel);
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 20px;
+    }
+    
+    .timeline-h {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 16px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+    }
+    
+    .timeline {
+      position: relative;
+      height: 60px;
+      background: var(--panel-2);
+      border-radius: 30px;
+      overflow: hidden;
+    }
+    
+    .tl-progress {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary-2), var(--primary));
+      border-radius: 30px;
+      transition: width var(--tr) ease;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 20px;
+    }
+    
+    .tl-marker {
+      width: 40px;
+      height: 40px;
+      background: #fff;
+      border-radius: 50%;
+      box-shadow: 0 2px 8px rgba(0,0,0,.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: grab;
+    }
+    
+    .tl-marker:active { cursor: grabbing; }
+    
+    .tl-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 8px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+    
+    /* ===== TABS ===== */
+    .tabs {
+      background: var(--panel);
+      border-radius: var(--radius-outer);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+    
+    .tabs-nav {
+      display: flex;
+      background: var(--panel-2);
+      border-bottom: 2px solid var(--border);
+      overflow-x: auto;
+    }
+    
+    .tab-btn {
+      flex: 1;
+      min-width: 120px;
+      padding: 16px 24px;
+      background: none;
+      border: none;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all var(--tr);
+      position: relative;
+      white-space: nowrap;
+    }
+    
+    .tab-btn:hover {
+      background: rgba(255,255,255,.5);
+      color: var(--text);
+    }
+    
+    .tab-btn.active {
+      background: var(--panel);
+      color: var(--primary);
+    }
+    
+    .tab-btn.active::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--primary);
+    }
+    
+    .tab-ico {
+      margin-right: 8px;
+      font-size: 16px;
+    }
+    
+    .tabs-content {
+      padding: 24px;
+      min-height: 420px;
+    }
+    
+    .panel {
+      display: none;
+      animation: fadeIn .3s;
+    }
+    
+    .panel.active { display: block; }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    /* ===== BLOCKS ===== */
+    .block {
+      background: var(--panel-2);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-left: 4px solid var(--primary);
+    }
+    
+    .block h3 {
+      color: var(--primary);
+      margin-bottom: 16px;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    .content-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 20px;
+    }
+    
+    .small {
+      font-size: 12px;
+      color: var(--muted);
+    }
+    
+    /* ===== TABLE ===== */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      background: var(--panel);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,.1);
+    }
+    
+    th {
+      background: var(--primary);
+      color: #fff;
+      padding: 12px 16px;
+      text-align: left;
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+    }
+    
+    td {
+      padding: 12px 16px;
+      border-top: 1px solid var(--border);
+      font-size: 14px;
+    }
+    
+    tbody tr:hover {
+      background: var(--panel-2);
+    }
+    
+    /* ===== TAGS & CHIPS ===== */
+    .tag {
+      display: inline-block;
+      padding: 4px 12px;
+      background: var(--primary-2);
+      color: #fff;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-right: 8px;
+      margin-bottom: 8px;
+    }
+    
+    .tag.success { background: var(--ok); }
+    .tag.warning { background: var(--warn); }
+    .tag.error { background: var(--bad); }
+    
+    .chips {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 12px;
+      border-radius: 999px;
+      background: var(--chip);
+      border: 1px solid var(--border);
+      transition: background var(--tr), border-color var(--tr);
+    }
+    
+    .chip input { accent-color: var(--primary); }
+    
+    .chip.selected {
+      background: var(--chip-on);
+      border-color: var(--primary);
+    }
+    
+    .chip.ok { border-color: var(--ok); color: var(--ok); }
+    .chip.warn { border-color: var(--warn); color: var(--warn); }
+    .chip.bad { border-color: var(--bad); color: var(--bad); }
+    .chip.muted { color: var(--muted); }
+    
+    /* ===== SEANCES ===== */
+    .seance {
+      background: var(--panel);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+      transition: all var(--tr);
+    }
+    
+    .seance:hover {
+      box-shadow: var(--shadow);
+      transform: translateY(-2px);
+    }
+    
+    .seance-h {
+      background: linear-gradient(135deg, var(--primary-2), var(--primary));
+      color: #fff;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    
+    .num {
+      width: 40px;
+      height: 40px;
+      background: rgba(255,255,255,.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 18px;
+    }
+    
+    .seance-b {
+      padding: 20px;
+    }
+    
+    /* ===== BUTTONS ===== */
+    .btn {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--tr);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .btn:hover {
+      background: var(--primary-2);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(21,101,192,.3);
+    }
+    
+    .btn.sm {
+      padding: 6px 12px;
+      font-size: 12px;
+    }
+    
+    .btn.secondary {
+      background: var(--chip);
+      color: var(--text);
+    }
+    
+    .btn.secondary:hover {
+      background: var(--chip-on);
+    }
+    
+    .danger {
+      color: var(--bad);
+      background: transparent;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      padding: 0 4px;
+    }
+    
+    .danger:hover { transform: scale(1.2); }
+    
+    /* ===== FAB ===== */
+    .fab-wrap {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      z-index: 1000;
+    }
+    
+    .fab {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      border: none;
+      background: var(--primary);
+      color: #fff;
+      font-size: 24px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,.2);
+      transition: all var(--tr);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .fab:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 16px rgba(0,0,0,.3);
+    }
+    
+    .fab.secondary {
+      width: 48px;
+      height: 48px;
+      font-size: 20px;
+      background: var(--panel);
+      color: var(--primary);
+      border: 1px solid var(--border);
+    }
+    
+    .fab-menu {
+      display: none;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    
+    .fab-menu.open { display: flex; }
+    
+    /* ===== TOP BAR ===== */
+    .top-bar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--header-bg);
+      color: var(--header-fg);
+      -webkit-backdrop-filter: blur(12px) saturate(1.1);
+      backdrop-filter: blur(12px) saturate(1.1);
+      border-bottom: 1px solid var(--header-border);
+      box-shadow: var(--header-shadow);
+      transition: background var(--tr), box-shadow var(--tr);
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    body.scrolled .top-bar { background: var(--header-bg-scrolled); }
+    
+    .top-bar .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+    }
+    
+    .top-bar .logo-mini {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      background: conic-gradient(from 210deg, #2a8cff, #7c4dff, #2a8cff);
+      box-shadow: inset 0 0 0 1px var(--header-border), 0 2px 8px rgba(0,0,0,.12);
+    }
+    
+    .top-bar .title {
+      font-weight: 900;
+      letter-spacing: .2px;
+      font-size: 18px;
+    }
+    
+    .toggle-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px;
+      border: 1px solid var(--border);
+      background: var(--chip);
+      border-radius: 999px;
+    }
+    
+    .toggle-pill button {
+      border: 0;
+      background: transparent;
+      padding: 6px 10px;
+      border-radius: 999px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 800;
+      color: var(--header-fg);
+    }
+    
+    .toggle-pill button[data-active="true"] {
+      background: var(--panel-2);
+    }
+    
+    /* ===== TOAST ===== */
+    .toasts {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 2000;
+    }
+    
+    .toast {
+      background: var(--panel);
+      padding: 16px 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,.15);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      animation: slideIn .3s ease-out;
+      min-width: 300px;
+      border-left: 4px solid var(--ok);
+    }
+    
+    .toast.error { border-left-color: var(--bad); }
+    .toast.info { border-left-color: var(--primary); }
+    .toast.warn { border-left-color: var(--warn); }
+    
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    
+    /* ===== MODAL ===== */
+    .modal-ov {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.6);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 3000;
+      backdrop-filter: blur(4px);
+    }
+    
+    .modal {
+      background: var(--panel);
+      border-radius: var(--radius-outer);
+      width: 90%;
+      max-width: 560px;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: 0 10px 40px rgba(0,0,0,.2);
+      animation: modalIn .3s ease-out;
+    }
+    
+    @keyframes modalIn {
+      from { transform: scale(.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    
+    .modal-h {
+      padding: 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    .modal-b { padding: 24px; }
+    
+    .modal-f {
+      padding: 24px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+    
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      .main { padding: 12px; }
+      .grid { grid-template-columns: 1fr; }
+      .content-grid { grid-template-columns: 1fr; }
+      .fab-wrap { bottom: 20px; right: 20px; }
+      .header { grid-template-columns: 1fr; } /* empilement intact ; l'espace logo disparaît visuellement */
+    }
+    
+    /* ===== PRINT ===== */
+    @media print {
+      body { background: #fff; }
+      .fab-wrap, .fab-menu, .danger, .btn, .tabs-nav, .modal-ov, .top-bar { display: none !important; }
+      .main { max-width: 100%; padding: 0; }
+      .panel { display: block !important; page-break-before: always; }
+      .editable { border: none; background: none; }
+      .header, .card, .seance { box-shadow: none; }
+    }
+    
+    /* ===== UTILITIES ===== */
+    .mono { font-family: var(--mono); }
+    .check { display: inline-flex; align-items: center; cursor: pointer; user-select: none; margin-right: 12px; margin-bottom: 8px; }
+    .check input { display: none; }
+    .box { width: 20px; height: 20px; border: 2px solid var(--border); border-radius: 4px; margin-right: 8px; display: flex; align-items: center; justify-content: center; transition: all var(--tr); }
+    .check input:checked + .box { background: var(--primary); border-color: var(--primary); }
+    .check input:checked + .box::after { content: '✓'; color: #fff; font-size: 14px; font-weight: 700; }
+  </style>
+</head>
+<body>
+  <!-- Top Bar -->
+  <div class="top-bar">
+    <div class="brand">
+      <div class="logo-mini"></div>
+      <div class="title">Fiche Séquence — BAC PRO CIEL</div>
+    </div>
+    <div class="toggle-pill" id="themeToggle">
+      <button type="button" data-theme="light">☀️ Clair</button>
+      <button type="button" data-theme="dark">🌙 Sombre</button>
+    </div>
+    <button class="btn sm" onclick="app.saveJSON()">💾 Sauver</button>
+    <button class="btn sm secondary" onclick="app.print()">🖨️ Imprimer</button>
+  </div>
+
+  <div class="main">
+    <!-- Header -->
+    <div class="header">
+      <!-- Logo retiré : on conserve une colonne neutre pour ne rien décaler -->
+      <div class="logo removed" aria-hidden="true"></div>
+      <div>
+        <div class="h1">📚 <span id="seq-title" class="editable" contenteditable="true">Titre de la séquence</span> <span class="badge" id="badge-niveau">1CIEL</span></div>
+        <div class="subtitle">Version ULTIMATE • Conformité référentiel • <span class="editable" id="doc-version" contenteditable="true">5.0</span> — Généré localement</div>
+      </div>
+      <div class="meta">
+        <div><strong>Professeur :</strong> <span class="editable" id="prof" contenteditable="true">Tom LAUNE</span></div>
+        <div><strong>Période :</strong> <span class="editable" id="periode" contenteditable="true">Trimestre 1</span></div>
+        <div><strong>Classe :</strong> <span class="editable" id="classe" contenteditable="true">1CIEL</span></div>
+        <div><strong>Public :</strong> <span class="editable" id="public" contenteditable="true">12–15 élèves, 15–18 ans</span></div>
+      </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div class="card">
+      <div class="grid">
+        <div class="metric">
+          <div class="metric-label">⏱️ Durée totale</div>
+          <div class="metric-value"><span id="duree" class="editable" contenteditable="true">9 heures</span></div>
+          <div class="small">Séances de 3h • 80% pratique / 20% théorie</div>
+        </div>
+        <div class="metric accent">
+          <div class="metric-label">🎯 Finalité</div>
+          <div class="metric-value"><span id="finalite" class="editable" contenteditable="true">Mettre en œuvre un service réseau sécurisé</span></div>
+        </div>
+        <div class="metric success">
+          <div class="metric-label">👥 Modalité</div>
+          <div class="metric-value"><span id="modalite" class="editable" contenteditable="true">Atelier (TP) + Cours</span></div>
+        </div>
+        <div class="metric warning">
+          <div class="metric-label">📍 Espace</div>
+          <div class="metric-value"><span id="espace" class="editable" contenteditable="true">Salle B12 — Labo réseau</span></div>
+        </div>
+      </div>
+
+      <div class="block" style="margin-top:24px;">
+        <h3>🎯 Compétences & Savoirs visés <span class="small">— sélection dans l'onglet « Référentiel »</span></h3>
+        <div id="competences-summary" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px"></div>
+        <div id="savoirs-summary" style="display:flex;flex-wrap:wrap;gap:8px"></div>
+      </div>
+
+      <div class="timeline-wrap">
+        <div class="timeline-h">📊 Positionnement dans l'année</div>
+        <div class="timeline">
+          <div class="tl-progress" id="tl-progress" style="width:25%;">
+            <div class="tl-marker" id="tl-marker">📍</div>
+          </div>
+        </div>
+        <div class="tl-labels"><span>Sept</span><span>Oct</span><span>Nov</span><span>Déc</span><span>Jan</span><span>Fév</span><span>Mars</span><span>Avr</span><span>Mai</span><span>Juin</span></div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <div class="tabs-nav">
+        <button class="tab-btn active" onclick="app.switchTab(event,'cadrage')"><span class="tab-ico">📋</span>Cadrage</button>
+        <button class="tab-btn" onclick="app.switchTab(event,'pedagogie')"><span class="tab-ico">📖</span>Pédagogie</button>
+        <button class="tab-btn" onclick="app.switchTab(event,'seances')"><span class="tab-ico">📅</span>Séances</button>
+        <button class="tab-btn" onclick="app.switchTab(event,'evaluation')"><span class="tab-ico">✅</span>Évaluation</button>
+        <button class="tab-btn" onclick="app.switchTab(event,'differenciation')"><span class="tab-ico">🎯</span>Différenciation</button>
+        <button class="tab-btn" onclick="app.switchTab(event,'referentiel')"><span class="tab-ico">📌</span>Référentiel</button>
+        <button class="tab-btn" onclick="app.switchTab(event,'conformite')"><span class="tab-ico">🛡️</span>Conformité</button>
+      </div>
+
+      <div class="tabs-content">
+        <!-- CADRAGE -->
+        <div class="panel active" id="tab-cadrage">
+          <div class="content-grid">
+            <div class="block">
+              <h3>🎯 Problématique / Intention</h3>
+              <p><strong>Support :</strong> <span id="support" class="editable" contenteditable="true">Projet fil rouge / mini-projet</span></p>
+              <p><strong>Question centrale :</strong> <span id="question" class="editable" contenteditable="true">Comment déployer et sécuriser un service réseau local ?</span></p>
+              <p class="small">Formulation actionnable (verbes observables : configurer, documenter, diagnostiquer…).</p>
+            </div>
+            <div class="block">
+              <h3>📚 Prérequis</h3>
+              <ul id="prerequis-list">
+                <li><span class="editable" contenteditable="true">Adressage IP de base</span> <button class="danger" onclick="app.removeItem('prerequis-list',this)">×</button></li>
+                <li><span class="editable" contenteditable="true">Utilisation d'un terminal</span> <button class="danger" onclick="app.removeItem('prerequis-list',this)">×</button></li>
+              </ul>
+              <button class="btn sm" onclick="app.addListItem('prerequis-list','Nouveau prérequis…')">+ Ajouter</button>
+            </div>
+            <div class="block">
+              <h3>🧭 Organisation</h3>
+              <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr));">
+                <div><strong>PFMP / lien entreprise :</strong><br><span id="pfmp" class="editable" contenteditable="true">Observation pratiques de sauvegarde & VLAN</span></div>
+                <div><strong>Co-intervention :</strong><br><span id="cointerv" class="editable" contenteditable="true">Maths (débits, binaire) • Français (compte-rendu)</span></div>
+                <div><strong>Contraintes :</strong><br><span id="contraintes" class="editable" contenteditable="true">Proxy académique, pas admin Windows</span></div>
+              </div>
+              <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr));margin-top:12px">
+                <div><strong>Plan B technique :</strong><br><span id="planb" class="editable" contenteditable="true">Matériel local + Packet Tracer/Wireshark offline</span></div>
+                <div><strong>Inclusif :</strong><br><span id="inclusif" class="editable" contenteditable="true">Supports guidés, binômes tutorés, tiers-temps si besoin</span></div>
+                <div><strong>Ressources ENT/ELEA :</strong><br><span id="elea" class="editable" contenteditable="true">Parcours ELEA #Séq_001 (H5P + quiz)</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PEDAGOGIE -->
+        <div class="panel" id="tab-pedagogie">
+          <div class="block">
+            <h3>🎓 Objectifs d'apprentissage</h3>
+            <p><strong>Objectif général :</strong></p>
+            <p><span id="obj-general" class="editable" contenteditable="true" style="display:block;min-height:50px">Être capable de concevoir, installer et sécuriser un réseau local d'entreprise</span></p>
+            <p style="margin-top:16px"><strong>Objectifs intermédiaires :</strong></p>
+            <ul id="objectifs-list">
+              <li><span class="editable" contenteditable="true">Identifier les composants d'un réseau</span> <button class="danger" onclick="app.removeItem('objectifs-list',this)">×</button></li>
+              <li><span class="editable" contenteditable="true">Configurer les équipements actifs</span> <button class="danger" onclick="app.removeItem('objectifs-list',this)">×</button></li>
+              <li><span class="editable" contenteditable="true">Mettre en place des règles de sécurité</span> <button class="danger" onclick="app.removeItem('objectifs-list',this)">×</button></li>
+            </ul>
+            <button class="btn sm" onclick="app.addListItem('objectifs-list','Nouvel objectif observable…')">+ Ajouter</button>
+          </div>
+          <div class="content-grid">
+            <div class="block">
+              <h3>🧪 Démarche & méthodes</h3>
+              <ul id="demarche-list">
+                <li><span class="editable" contenteditable="true">DIAM : D→I→A→M (répartition par séances)</span> <button class="danger" onclick="app.removeItem('demarche-list',this)">×</button></li>
+                <li><span class="editable" contenteditable="true">5 phases STI : Activation • Découverte • Structuration • Réinvestissement • Synthèse</span> <button class="danger" onclick="app.removeItem('demarche-list',this)">×</button></li>
+              </ul>
+              <button class="btn sm" onclick="app.addListItem('demarche-list','Ajouter une modalité pédagogique…')">+ Ajouter</button>
+            </div>
+            <div class="block">
+              <h3>📦 Ressources</h3>
+              <ul id="ressources-list">
+                <li><span class="editable" contenteditable="true">Packet Tracer, Wireshark, PuTTY, WinSCP</span> <button class="danger" onclick="app.removeItem('ressources-list',this)">×</button></li>
+                <li><span class="editable" contenteditable="true">Routeurs/switches, 8× RPi4, 10× ESP32</span> <button class="danger" onclick="app.removeItem('ressources-list',this)">×</button></li>
+              </ul>
+              <button class="btn sm" onclick="app.addListItem('ressources-list','Ajouter une ressource…')">+ Ajouter</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- SEANCES -->
+        <div class="panel" id="tab-seances">
+          <div class="block">
+            <div style="display:flex;gap:24px;flex-wrap:wrap">
+              <div><div class="small">Séances</div><div style="font-size:24px;font-weight:700;color:var(--primary)" id="stat-seances">3</div></div>
+              <div><div class="small">Total</div><div style="font-size:24px;font-weight:700;color:var(--primary)" id="stat-total">9h</div></div>
+              <div><div class="small">Semaines</div><div style="font-size:24px;font-weight:700;color:var(--primary)" id="stat-semaines">3</div></div>
+            </div>
+          </div>
+
+          <div id="seances"></div>
+
+          <button class="btn" id="btnAddSeance">+ Ajouter une séance</button>
+          <button class="btn sm" style="margin-left:8px" onclick="app.exportSeancesCSV()">⇩ CSV Séances</button>
+          <div class="small" style="margin-top:8px">Chaque séance suit 5 phases STI dans la fiche séance ; ici se trouve le plan macro en 3h.</div>
+        </div>
+
+        <!-- EVALUATION -->
+        <div class="panel" id="tab-evaluation">
+          <div class="block">
+            <h3>📊 Modalités & barème</h3>
+            <table>
+              <thead><tr><th>Type</th><th>Modalités</th><th>Critères</th><th>Barème</th><th></th></tr></thead>
+              <tbody id="eval-rows">
+                <tr>
+                  <td><span class="editable" contenteditable="true">Formative</span></td>
+                  <td><span class="editable" contenteditable="true">Observations en TP + QCM</span></td>
+                  <td><span class="editable" contenteditable="true">Respect des procédures, logs</span></td>
+                  <td><span class="editable" contenteditable="true">/20 (non certificatif)</span></td>
+                  <td><button class="danger" onclick="app.removeRow(this)">×</button></td>
+                </tr>
+                <tr>
+                  <td><span class="editable" contenteditable="true">Sommative</span></td>
+                  <td><span class="editable" contenteditable="true">TP noté / mini-projet</span></td>
+                  <td><span class="editable" contenteditable="true">Fonctionnalité (8) • Réalisation (6) • Doc (3) • Autonomie (3)</span></td>
+                  <td><span class="editable" contenteditable="true">/20</span></td>
+                  <td><button class="danger" onclick="app.removeRow(this)">×</button></td>
+                </tr>
+              </tbody>
+            </table>
+            <div style="margin-top:8px">
+              <button class="btn sm" onclick="app.addEvaluation()">+ Ajouter une évaluation</button>
+              <button class="btn sm" onclick="app.exportEvaluationsCSV()">⇩ CSV Évaluations</button>
+            </div>
+          </div>
+
+          <div class="block">
+            <h3>✅ Lien CCF</h3>
+            <div style="background:var(--panel-2);padding:16px;border-radius:8px;margin-bottom:16px">
+              <strong>E2 — Maintenance produits électroniques</strong>
+              <p style="margin-top:8px"><span class="editable" contenteditable="true">C03, C07, C11 — 3h pratique</span></p>
+            </div>
+            <div style="background:var(--panel-2);padding:16px;border-radius:8px;margin-bottom:16px">
+              <strong>E31 — Mise en œuvre réseaux</strong>
+              <p style="margin-top:8px"><span class="editable" contenteditable="true">C06, C09, C10 — 3h pratique</span></p>
+            </div>
+            <div style="background:var(--panel-2);padding:16px;border-radius:8px">
+              <strong>E32 — Valorisation donnée & cybersécurité</strong>
+              <p style="margin-top:8px"><span class="editable" contenteditable="true">C01, C04, C08 — 3h pratique</span></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- DIFFERENCIATION -->
+        <div class="panel" id="tab-differenciation">
+          <div class="content-grid">
+            <div class="block">
+              <h3>🔧 Pour les élèves en difficulté</h3>
+              <ul id="diff-diff">
+                <li><span class="editable" contenteditable="true">Fiches méthode illustrées pas à pas</span> <button class="danger" onclick="app.removeItem('diff-diff',this)">×</button></li>
+                <li><span class="editable" contenteditable="true">Binômes hétérogènes avec tutorat</span> <button class="danger" onclick="app.removeItem('diff-diff',this)">×</button></li>
+              </ul>
+              <button class="btn sm" onclick="app.addListItem('diff-diff','Ajouter une adaptation…')">+ Ajouter</button>
+            </div>
+            <div class="block">
+              <h3>🚀 Pour les élèves avancés</h3>
+              <ul id="diff-adv">
+                <li><span class="editable" contenteditable="true">Défi : segmentation VLAN + ACL</span> <button class="danger" onclick="app.removeItem('diff-adv',this)">×</button></li>
+                <li><span class="editable" contenteditable="true">Rôle de tuteur sur un poste</span> <button class="danger" onclick="app.removeItem('diff-adv',this)">×</button></li>
+              </ul>
+              <button class="btn sm" onclick="app.addListItem('diff-adv','Ajouter un défi…')">+ Ajouter</button>
+            </div>
+          </div>
+          <div class="block">
+            <h3>🔒 Aménagements (PPS/PAP/PAI)</h3>
+            <span class="editable" contenteditable="true" style="display:block;min-height:60px">Adaptation des consignes, tiers-temps, supports accessibles — sans données personnelles.</span>
+          </div>
+        </div>
+
+        <!-- REFERENTIEL -->
+        <div class="panel" id="tab-referentiel">
+          <div class="block">
+            <h3>🎯 Unités / Blocs (sélection souple)</h3>
+            <div class="chips" id="units-list">
+              <label class="chip">
+                <input type="checkbox" data-unit="U2">
+                U2 — Réalisation & maintenance (Bloc 1)
+              </label>
+              <label class="chip">
+                <input type="checkbox" data-unit="U31">
+                U31 — Mise en œuvre réseaux (Bloc 2)
+              </label>
+              <label class="chip">
+                <input type="checkbox" data-unit="U32">
+                U32 — Donnée & cybersécurité (Bloc 3)
+              </label>
+            </div>
+            <p class="small">Cocher une unité n'impose pas ses compétences. Les compétences cochées activent automatiquement leur unité.</p>
+          </div>
+          
+          <div class="block">
+            <h3>📚 Compétences (lien bidirectionnel avec unités)</h3>
+            <div id="comp-catalog" class="content-grid"></div>
+          </div>
+          
+          <div class="block">
+            <h3>📘 Savoirs associés</h3>
+            <div id="sav-catalog" class="content-grid"></div>
+          </div>
+          
+          <div class="block">
+            <h3>📊 Conformité des unités</h3>
+            <div class="chips">
+              <div id="conf-u2" class="chip muted">U2 → attend C03, C07, C11 <span class="mono" id="score-u2"></span></div>
+              <div id="conf-u31" class="chip muted">U31 → attend C06, C09, C10 <span class="mono" id="score-u31"></span></div>
+              <div id="conf-u32" class="chip muted">U32 → attend C01, C04, C08 <span class="mono" id="score-u32"></span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CONFORMITE -->
+        <div class="panel" id="tab-conformite">
+          <div class="content-grid">
+            <div class="block">
+              <h3>🛡️ Vérification express</h3>
+              <ul id="checklist">
+                <li><label class="check"><input type="checkbox" id="chk-obj"><span class="box"></span></label>Objectifs rédigés en verbes observables</li>
+                <li><label class="check"><input type="checkbox" id="chk-ref"><span class="box"></span></label>Compétences (≥1) & Savoirs (≥1) sélectionnés</li>
+                <li><label class="check"><input type="checkbox" id="chk-seances"><span class="box"></span></label>Séances renseignées (≥2)</li>
+                <li><label class="check"><input type="checkbox" id="chk-eval"><span class="box"></span></label>Modalités & barème complets</li>
+                <li><label class="check"><input type="checkbox" id="chk-planb"><span class="box"></span></label>Plan B technique défini (proxy/no-admin)</li>
+              </ul>
+              <div style="margin-top:12px">
+                <button class="btn" onclick="app.runCompliance()">Lancer la vérification</button>
+                <span id="compliance-score" class="tag" style="margin-left:8px">Score: 0%</span>
+              </div>
+              <p class="small" style="margin-top:8px">Ce contrôle ne remplace pas l'analyse pédagogique, mais sécurise l'essentiel pour un remplacement ou une inspection.</p>
+            </div>
+            <div class="block">
+              <h3>📄 Mentions / Cadre</h3>
+              <ul>
+                <li>Référentiel Bac Pro CIEL — compétences C01…C11 (C02/C05 non mobilisées)</li>
+                <li>Répartition indicative : 20% théorie / 80% pratique</li>
+                <li>Respect RGPD (aucune donnée nominative d'élève)</li>
+                <li>Traçabilité : conserver versions JSON/CSV exportées</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating actions -->
+  <div class="fab-wrap">
+    <div class="fab-menu" id="fab-menu">
+      <button class="fab secondary" onclick="app.saveJSON()" title="Sauvegarder JSON">💾</button>
+      <button class="fab secondary" onclick="app.loadJSON()" title="Charger JSON">📂</button>
+      <button class="fab secondary" onclick="app.exportPDF()" title="Exporter PDF">📄</button>
+      <button class="fab secondary" onclick="app.exportSeancesCSV()" title="CSV Séances">📊</button>
+      <button class="fab secondary" onclick="app.exportEvaluationsCSV()" title="CSV Évaluations">📈</button>
+      <button class="fab secondary" onclick="app.reset()" title="Réinitialiser">♻️</button>
+    </div>
+    <button class="fab" onclick="app.toggleMenu()" title="Menu">☰</button>
+  </div>
+
+  <!-- Toasts & Modal -->
+  <div class="toasts" id="toasts"></div>
+  <div class="modal-ov" id="modal-ov">
+    <div class="modal">
+      <div class="modal-h">
+        <h3 id="modal-title">Titre</h3>
+        <button class="danger" onclick="app.closeModal()">×</button>
+      </div>
+      <div class="modal-b" id="modal-body">Contenu</div>
+      <div class="modal-f">
+        <button class="btn secondary" onclick="app.closeModal()">Annuler</button>
+        <button class="btn" id="modal-confirm" onclick="app.confirmModal()">Confirmer</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // === CATALOGUE RÉFÉRENTIEL (nomenclature stricte BAC PRO CIEL) ===
+    const CATALOG = {
+      competences: [
+        {code:'C01', label:"Communiquer en situation professionnelle (français/anglais)", unit:'U32'},
+        {code:'C03', label:"Participer à un projet", unit:'U2'},
+        {code:'C04', label:"Analyser une structure matérielle et logicielle", unit:'U32'},
+        {code:'C06', label:"Valider la conformité d'une installation", unit:'U31'},
+        {code:'C07', label:"Réaliser des maquettes et prototypes", unit:'U2'},
+        {code:'C08', label:"Coder", unit:'U32'},
+        {code:'C09', label:"Installer les éléments d'un système", unit:'U31'},
+        {code:'C10', label:"Exploiter un réseau", unit:'U31'},
+        {code:'C11', label:"Maintenir un système électronique ou réseau informatique", unit:'U2'}
+      ],
+      savoirs: [
+        {code:'S0', label:'Électricité — Électronique'},
+        {code:'S1', label:'Informatique & Systèmes'},
+        {code:'S2', label:'Cybersécurité'},
+        {code:'S3', label:'Réseaux & Télécoms'},
+        {code:'S4', label:'Traitement de la donnée'},
+        {code:'S5', label:'Projet & Qualité'},
+        {code:'S6', label:'Culture scientifique & technique'}
+      ],
+      units: {
+        U2: {label:'Réalisation & maintenance', competences:['C03','C07','C11']},
+        U31: {label:'Mise en œuvre réseaux', competences:['C06','C09','C10']},
+        U32: {label:'Valorisation donnée & cybersécurité', competences:['C01','C04','C08']}
+      }
+    };
+
+    // === Application ===
+    const app = {
+      data: {
+        meta: {
+          titre: "Titre de la séquence",
+          version: "5.0",
+          periode: "Trimestre 1",
+          classe: "1CIEL",
+          public: "12–15 élèves, 15–18 ans",
+          prof: "Tom LAUNE",
+          progression: 25,
+          duree: "9h",
+          finalite: "Mettre en œuvre un service réseau sécurisé",
+          modalite: "Atelier (TP) + Cours",
+          espace: "Salle B12 — Labo réseau"
+        },
+        cadrage: {
+          support: "Projet fil rouge / mini-projet",
+          question: "Comment déployer et sécuriser un service réseau local ?",
+          prerequis: ["Adressage IP de base", "Utilisation d'un terminal"],
+          pfmp: "Observation pratiques de sauvegarde & VLAN",
+          cointerv: "Maths (débits, binaire) • Français (compte-rendu)",
+          contraintes: "Proxy académique, pas admin Windows",
+          planb: "Matériel local + Packet Tracer/Wireshark offline",
+          inclusif: "Supports guidés, binômes tutorés, tiers-temps si besoin",
+          elea: "Parcours ELEA #Séq_001 (H5P + quiz)"
+        },
+        pedagogie: {
+          objectif_general: "Être capable de concevoir, installer et sécuriser un réseau local d'entreprise",
+          objectifs: ["Identifier les composants d'un réseau", "Configurer les équipements actifs", "Mettre en place des règles de sécurité"],
+          demarches: ["DIAM : D→I→A→M (répartition par séances)", "5 phases STI : Activation • Découverte • Structuration • Réinvestissement • Synthèse"],
+          ressources: ["Packet Tracer, Wireshark, PuTTY, WinSCP", "Routeurs/switches, 8× RPi4, 10× ESP32"]
+        },
+        seances: [
+          {
+            numero: 1,
+            titre: "Découverte & mise en place",
+            duree: "3h",
+            objectifs: ["Découvrir les composants et l'architecture cible"],
+            activites: ["Manipulation matériel", "Schéma réseau", "Plan d'adressage simple"],
+            validation: "Observation, questionnement oral"
+          },
+          {
+            numero: 2,
+            titre: "Configuration & test",
+            duree: "3h",
+            objectifs: ["Configurer équipements et services de base"],
+            activites: ["VLAN + trunk", "DHCP/DNS de base", "Ping/Traceroute"],
+            validation: "QCM + capture Wireshark"
+          },
+          {
+            numero: 3,
+            titre: "Sécurisation & documentation",
+            duree: "3h",
+            objectifs: ["Appliquer règles de sécurité et documenter"],
+            activites: ["ACL simples", "Sauvegarde config", "Rédaction procédure"],
+            validation: "Mini-rapport /20"
+          }
+        ],
+        evaluation: {
+          lignes: [
+            ["Formative", "Observations en TP + QCM", "Respect des procédures, logs", "/20 (non certificatif)"],
+            ["Sommative", "TP noté / mini-projet", "Fonctionnalité (8) • Réalisation (6) • Doc (3) • Autonomie (3)", "/20"]
+          ]
+        },
+        referentiel: {
+          units: [],
+          competences: [],
+          savoirs: []
+        }
+      },
+      isDragging: false,
+      modalCb: null,
+
+      init() {
+        this.initTheme();
+        this.load();
+        this.paintFromData();
+        this.bindEditables();
+        this.bindAutosave();
+        this.initTimelineDrag();
+        this.renderSeances();
+        this.renderCatalogs();
+        this.refreshSummaries();
+        this.updateCompliance();
+        
+        // Event listener for add séance button
+        document.getElementById('btnAddSeance').addEventListener('click', () => {
+          const next = this.data.seances.length + 1;
+          this.data.seances.push({
+            numero: next,
+            titre: 'Nouvelle séance',
+            duree: '3h',
+            objectifs: [],
+            activites: [],
+            validation: ''
+          });
+          this.renderSeances();
+          this.save();
+          this.toast('Séance ajoutée', 'success');
+        });
+
+        // Close fab menu on outside click
+        document.addEventListener('click', (e) => {
+          if (!e.target.closest('.fab-wrap')) {
+            document.getElementById('fab-menu').classList.remove('open');
+          }
+        });
+      },
+
+      // Theme management
+      initTheme() {
+        const saved = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', saved);
+        this.updateThemeToggle();
+
+        const toggle = document.getElementById('themeToggle');
+        toggle.addEventListener('click', (e) => {
+          const btn = e.target.closest('button');
+          if (!btn) return;
+          const theme = btn.dataset.theme;
+          document.documentElement.setAttribute('data-theme', theme);
+          localStorage.setItem('theme', theme);
+          this.updateThemeToggle();
+          this.toast(`Thème ${theme === 'dark' ? 'sombre' : 'clair'} activé`, 'info');
+        });
+
+        // Scroll header effect
+        window.addEventListener('scroll', () => {
+          document.body.classList.toggle('scrolled', window.scrollY > 8);
+        });
+      },
+
+      updateThemeToggle() {
+        const current = document.documentElement.getAttribute('data-theme') || 'light';
+        document.querySelectorAll('#themeToggle button').forEach(btn => {
+          btn.dataset.active = (btn.dataset.theme === current).toString();
+        });
+      },
+
+      // Tabs
+      switchTab(evt, name) {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        evt.currentTarget.classList.add('active');
+        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+        document.getElementById(`tab-${name}`).classList.add('active');
+      },
+
+      // Timeline
+      initTimelineDrag() {
+        const tl = document.querySelector('.timeline');
+        const marker = document.getElementById('tl-marker');
+        marker.addEventListener('mousedown', (e) => {
+          this.isDragging = true;
+          e.preventDefault();
+        });
+        document.addEventListener('mousemove', (e) => {
+          if (!this.isDragging) return;
+          const rect = tl.getBoundingClientRect();
+          let pct = ((e.clientX - rect.left) / rect.width) * 100;
+          pct = Math.max(0, Math.min(100, pct));
+          this.data.meta.progression = pct;
+          this.updateProgress();
+        });
+        document.addEventListener('mouseup', () => {
+          if (this.isDragging) {
+            this.isDragging = false;
+            this.save();
+          }
+        });
+      },
+
+      updateProgress() {
+        const p = document.getElementById('tl-progress');
+        if (p) p.style.width = `${this.data.meta.progression}%`;
+      },
+
+      // Editables & Autosave
+      bindEditables() {
+        // Already contenteditable in HTML, just need to sync
+      },
+
+      bindAutosave() {
+        // Global autosave listener (Fix 2)
+        document.addEventListener('focusout', (e) => {
+          if (e.target.matches('.editable')) {
+            this.syncFromDOM();
+            this.save();
+            this.toast('Sauvegarde auto', 'success');
+          }
+        });
+      },
+
+      // Data sync
+      paintFromData() {
+        const m = this.data.meta;
+        document.getElementById('seq-title').innerText = m.titre;
+        document.getElementById('badge-niveau').innerText = m.classe;
+        document.getElementById('doc-version').innerText = m.version;
+        document.getElementById('prof').innerText = m.prof;
+        document.getElementById('periode').innerText = m.periode;
+        document.getElementById('classe').innerText = m.classe;
+        document.getElementById('public').innerText = m.public;
+        document.getElementById('duree').innerText = m.duree;
+        document.getElementById('finalite').innerText = m.finalite;
+        document.getElementById('modalite').innerText = m.modalite;
+        document.getElementById('espace').innerText = m.espace;
+        this.updateProgress();
+
+        const c = this.data.cadrage;
+        document.getElementById('support').innerText = c.support;
+        document.getElementById('question').innerText = c.question;
+        document.getElementById('pfmp').innerText = c.pfmp;
+        document.getElementById('cointerv').innerText = c.cointerv;
+        document.getElementById('contraintes').innerText = c.contraintes;
+        document.getElementById('planb').innerText = c.planb;
+        document.getElementById('inclusif').innerText = c.inclusif;
+        document.getElementById('elea').innerText = c.elea;
+
+        // Lists
+        this.setList('prerequis-list', c.prerequis);
+        this.setList('objectifs-list', this.data.pedagogie.objectifs);
+        this.setList('demarche-list', this.data.pedagogie.demarches);
+        this.setList('ressources-list', this.data.pedagogie.ressources);
+
+        // Evaluations
+        const tbody = document.getElementById('eval-rows');
+        tbody.innerHTML = '';
+        this.data.evaluation.lignes.forEach(line => {
+          tbody.insertAdjacentHTML('beforeend', `
+            <tr>
+              ${line.map(col => `<td><span class="editable" contenteditable="true">${this.escapeHtml(col)}</span></td>`).join('')}
+              <td><button class="danger" onclick="app.removeRow(this)">×</button></td>
+            </tr>
+          `);
+        });
+
+        // Stats
+        document.getElementById('stat-seances').innerText = this.data.seances.length;
+        document.getElementById('stat-total').innerText = this.data.meta.duree;
+      },
+
+      syncFromDOM() {
+        const get = id => document.getElementById(id).innerText.trim();
+        const getList = id => Array.from(document.querySelectorAll(`#${id} li .editable`)).map(e => e.innerText.trim()).filter(Boolean);
+
+        // Meta
+        this.data.meta.titre = get('seq-title');
+        this.data.meta.version = get('doc-version');
+        this.data.meta.periode = get('periode');
+        this.data.meta.classe = get('classe');
+        this.data.meta.public = get('public');
+        this.data.meta.prof = get('prof');
+        this.data.meta.duree = get('duree');
+        this.data.meta.finalite = get('finalite');
+        this.data.meta.modalite = get('modalite');
+        this.data.meta.espace = get('espace');
+
+        // Cadrage
+        this.data.cadrage.support = get('support');
+        this.data.cadrage.question = get('question');
+        this.data.cadrage.pfmp = get('pfmp');
+        this.data.cadrage.cointerv = get('cointerv');
+        this.data.cadrage.contraintes = get('contraintes');
+        this.data.cadrage.planb = get('planb');
+        this.data.cadrage.inclusif = get('inclusif');
+        this.data.cadrage.elea = get('elea');
+
+        // Lists
+        this.data.cadrage.prerequis = getList('prerequis-list');
+        this.data.pedagogie.objectif_general = document.getElementById('obj-general').innerText.trim();
+        this.data.pedagogie.objectifs = getList('objectifs-list');
+        this.data.pedagogie.demarches = getList('demarche-list');
+        this.data.pedagogie.ressources = getList('ressources-list');
+
+        // Evaluations
+        this.data.evaluation.lignes = Array.from(document.querySelectorAll('#eval-rows tr')).map(tr =>
+          Array.from(tr.querySelectorAll('td .editable')).slice(0, 4).map(e => e.innerText.trim())
+        );
+      },
+
+      // Lists helpers
+      setList(id, arr) {
+        const ul = document.getElementById(id);
+        ul.innerHTML = '';
+        arr.forEach(txt => {
+          ul.insertAdjacentHTML('beforeend', `
+            <li><span class="editable" contenteditable="true">${this.escapeHtml(txt)}</span> 
+            <button class="danger" onclick="app.removeItem('${id}',this)">×</button></li>
+          `);
+        });
+      },
+
+      addListItem(id, placeholder) {
+        const ul = document.getElementById(id);
+        ul.insertAdjacentHTML('beforeend', `
+          <li><span class="editable" contenteditable="true">${this.escapeHtml(placeholder)}</span> 
+          <button class="danger" onclick="app.removeItem('${id}',this)">×</button></li>
+        `);
+        this.toast('Élément ajouté', 'success');
+      },
+
+      removeItem(id, btn) {
+        btn.closest('li').remove();
+        this.save();
+      },
+
+      // Séances
+      renderSeances() {
+        const cont = document.getElementById('seances');
+        cont.innerHTML = '';
+        this.data.seances.forEach(s => cont.insertAdjacentHTML('beforeend', this.seanceCard(s)));
+        document.getElementById('stat-seances').innerText = this.data.seances.length;
+        this.bindEditables();
+      },
+
+      seanceCard(s) {
+        return `
+          <div class="seance" data-num="${s.numero}">
+            <div class="seance-h">
+              <div class="num">${s.numero}</div>
+              <div>
+                <div style="font-size:18px;font-weight:700">
+                  <span class="editable" contenteditable="true" onblur="app.updateSeance(${s.numero})" style="color:#fff">${this.escapeHtml(s.titre)}</span>
+                </div>
+                <div style="font-size:14px;opacity:.9">
+                  <span class="editable" contenteditable="true" onblur="app.updateSeance(${s.numero})" style="color:#fff">${this.escapeHtml(s.duree)}</span>
+                </div>
+              </div>
+              <button class="danger" style="margin-left:auto;color:#fff" onclick="app.deleteSeance(${s.numero})">×</button>
+            </div>
+            <div class="seance-b">
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+                <div>
+                  <h4 style="color:var(--primary);margin-bottom:12px">🎯 Objectifs</h4>
+                  <ul id="obj-${s.numero}">
+                    ${s.objectifs.map(o => `
+                      <li><span class="editable" contenteditable="true" onblur="app.updateSeance(${s.numero})">${this.escapeHtml(o)}</span> 
+                      <button class="danger" onclick="app.removeSeanceItem('obj-${s.numero}',this,${s.numero})">×</button></li>
+                    `).join('')}
+                  </ul>
+                  <button class="btn sm" onclick="app.addSeanceItem('obj-${s.numero}','Nouvel objectif…',${s.numero})">+ Ajouter</button>
+                </div>
+                <div>
+                  <h4 style="color:var(--primary);margin-bottom:12px">📋 Activités</h4>
+                  <ul id="act-${s.numero}">
+                    ${s.activites.map(a => `
+                      <li><span class="editable" contenteditable="true" onblur="app.updateSeance(${s.numero})">${this.escapeHtml(a)}</span> 
+                      <button class="danger" onclick="app.removeSeanceItem('act-${s.numero}',this,${s.numero})">×</button></li>
+                    `).join('')}
+                  </ul>
+                  <button class="btn sm" onclick="app.addSeanceItem('act-${s.numero}','Nouvelle activité…',${s.numero})">+ Ajouter</button>
+                </div>
+              </div>
+              <div style="margin-top:16px">
+                <h4 style="color:var(--primary);margin-bottom:12px">✅ Évaluation</h4>
+                <span class="editable" contenteditable="true" onblur="app.updateSeance(${s.numero})">${this.escapeHtml(s.validation)}</span>
+              </div>
+            </div>
+          </div>
+        `;
+      },
+
+      addSeanceItem(id, placeholder, num) {
+        const ul = document.getElementById(id);
+        ul.insertAdjacentHTML('beforeend', `
+          <li><span class="editable" contenteditable="true" onblur="app.updateSeance(${num})">${this.escapeHtml(placeholder)}</span> 
+          <button class="danger" onclick="app.removeSeanceItem('${id}',this,${num})">×</button></li>
+        `);
+      },
+
+      removeSeanceItem(id, btn, num) {
+        btn.closest('li').remove();
+        this.updateSeance(num);
+      },
+
+      updateSeance(num) {
+        const card = document.querySelector(`.seance[data-num="${num}"]`);
+        if (!card) return;
+        
+        // Fix 1: Sélecteur durée robuste
+        const header = card.querySelector('.seance-h > div:nth-child(2)');
+        const titre = header.querySelector('div:nth-child(1) .editable').innerText.trim();
+        const duree = header.querySelector('div:nth-child(2) .editable').innerText.trim();
+        
+        const objectifs = Array.from(card.querySelectorAll(`#obj-${num} .editable`)).map(e => e.innerText.trim());
+        const activites = Array.from(card.querySelectorAll(`#act-${num} .editable`)).map(e => e.innerText.trim());
+        const validation = card.querySelector('.seance-b > div:last-child .editable').innerText.trim();
+        
+        const s = this.data.seances.find(x => x.numero === num);
+        if (s) {
+          s.titre = titre;
+          s.duree = duree;
+          s.objectifs = objectifs;
+          s.activites = activites;
+          s.validation = validation;
+        }
+        this.save();
+      },
+
+      deleteSeance(num) {
+        this.data.seances = this.data.seances.filter(s => s.numero !== num);
+        this.renumber();
+        this.renderSeances();
+        this.save();
+      },
+
+      renumber() {
+        this.data.seances.forEach((s, i) => s.numero = i + 1);
+      },
+
+      // Référentiel avec sélection souple U↔C
+      renderCatalogs() {
+        // Unités
+        const unitsDiv = document.getElementById('units-list');
+        unitsDiv.addEventListener('change', (e) => {
+          if (e.target.dataset.unit) {
+            const unit = e.target.dataset.unit;
+            if (!e.target.checked && this.hasCompetenceInUnit(unit)) {
+              e.target.checked = true;
+              this.toast(`Impossible de décocher ${unit} : compétence liée active`, 'warn');
+            } else {
+              this.updateUnits();
+            }
+          }
+        });
+
+        // Compétences
+        const compDiv = document.getElementById('comp-catalog');
+        compDiv.innerHTML = '';
+        const compGrid = document.createElement('div');
+        compGrid.className = 'chips';
+        
+        CATALOG.competences.forEach(c => {
+          const label = document.createElement('label');
+          label.className = 'chip';
+          const cb = document.createElement('input');
+          cb.type = 'checkbox';
+          cb.dataset.code = c.code;
+          cb.dataset.unit = c.unit;
+          cb.checked = this.data.referentiel.competences.includes(c.code);
+          label.appendChild(cb);
+          label.appendChild(document.createTextNode(` ${c.code} — ${c.label}`));
+          compGrid.appendChild(label);
+        });
+        compDiv.appendChild(compGrid);
+
+        compDiv.addEventListener('change', (e) => {
+          if (e.target.dataset.code) {
+            const code = e.target.dataset.code;
+            const unit = e.target.dataset.unit;
+            
+            if (e.target.checked) {
+              if (!this.data.referentiel.competences.includes(code)) {
+                this.data.referentiel.competences.push(code);
+              }
+              // Auto-check unit
+              const unitCb = document.querySelector(`[data-unit="${unit}"]`);
+              if (unitCb) unitCb.checked = true;
+            } else {
+              this.data.referentiel.competences = this.data.referentiel.competences.filter(c => c !== code);
+              // Check if unit can be unchecked
+              if (!this.hasCompetenceInUnit(unit)) {
+                const unitCb = document.querySelector(`[data-unit="${unit}"]`);
+                if (unitCb) unitCb.checked = false;
+              }
+            }
+            
+            this.updateUnits();
+            this.refreshSummaries();
+            this.updateCompliance();
+            this.save();
+          }
+        });
+
+        // Savoirs
+        const savDiv = document.getElementById('sav-catalog');
+        savDiv.innerHTML = '';
+        const savGrid = document.createElement('div');
+        savGrid.className = 'chips';
+        
+        CATALOG.savoirs.forEach(s => {
+          const label = document.createElement('label');
+          label.className = 'chip';
+          const cb = document.createElement('input');
+          cb.type = 'checkbox';
+          cb.dataset.code = s.code;
+          cb.checked = this.data.referentiel.savoirs.includes(s.code);
+          label.appendChild(cb);
+          label.appendChild(document.createTextNode(` ${s.code} — ${s.label}`));
+          savGrid.appendChild(label);
+        });
+        savDiv.appendChild(savGrid);
+
+        savDiv.addEventListener('change', (e) => {
+          if (e.target.dataset.code) {
+            const code = e.target.dataset.code;
+            if (e.target.checked) {
+              if (!this.data.referentiel.savoirs.includes(code)) {
+                this.data.referentiel.savoirs.push(code);
+              }
+            } else {
+              this.data.referentiel.savoirs = this.data.referentiel.savoirs.filter(s => s !== code);
+            }
+            this.refreshSummaries();
+            this.save();
+          }
+        });
+
+        this.updateCompliance();
+      },
+
+      hasCompetenceInUnit(unit) {
+        const unitComps = CATALOG.units[unit].competences;
+        return unitComps.some(c => this.data.referentiel.competences.includes(c));
+      },
+
+      updateUnits() {
+        const checkedUnits = Array.from(document.querySelectorAll('#units-list input:checked')).map(cb => cb.dataset.unit);
+        this.data.referentiel.units = checkedUnits;
+        this.updateCompliance();
+        this.save();
+      },
+
+      updateCompliance() {
+        // Update unit badges
+        ['U2', 'U31', 'U32'].forEach(unit => {
+          const badge = document.getElementById(`conf-${unit.toLowerCase()}`);
+          const scoreEl = document.getElementById(`score-${unit.toLowerCase()}`);
+          const needed = CATALOG.units[unit].competences;
+          const selected = this.data.referentiel.competences.filter(c => needed.includes(c));
+          const score = selected.length;
+          
+          scoreEl.textContent = score > 0 ? ` — ${score}/${needed.length}` : '';
+          
+          badge.classList.remove('ok', 'warn', 'bad', 'muted');
+          if (!this.data.referentiel.units.includes(unit)) {
+            badge.classList.add('muted');
+          } else if (score === needed.length) {
+            badge.classList.add('ok');
+          } else if (score > 0) {
+            badge.classList.add('warn');
+          } else {
+            badge.classList.add('bad');
+          }
+        });
+      },
+
+      refreshSummaries() {
+        // Compétences summary
+        const compSum = document.getElementById('competences-summary');
+        compSum.innerHTML = '';
+        this.data.referentiel.competences.forEach(code => {
+          const comp = CATALOG.competences.find(c => c.code === code);
+          if (comp) {
+            const tag = document.createElement('span');
+            tag.className = 'tag';
+            tag.textContent = `${comp.code} — ${comp.label}`;
+            compSum.appendChild(tag);
+          }
+        });
+
+        // Savoirs summary
+        const savSum = document.getElementById('savoirs-summary');
+        savSum.innerHTML = '';
+        this.data.referentiel.savoirs.forEach(code => {
+          const sav = CATALOG.savoirs.find(s => s.code === code);
+          if (sav) {
+            const tag = document.createElement('span');
+            tag.className = 'tag warning';
+            tag.textContent = `${sav.code} — ${sav.label}`;
+            savSum.appendChild(tag);
+          }
+        });
+      },
+
+      // Compliance
+      runCompliance() {
+        this.syncFromDOM();
+        let score = 0, total = 5;
+        
+        const ok1 = !!(this.data.pedagogie.objectif_general && this.data.pedagogie.objectifs.length);
+        const ok2 = this.data.referentiel.competences.length > 0 && this.data.referentiel.savoirs.length > 0;
+        const ok3 = this.data.seances.length >= 2;
+        const ok4 = (this.data.evaluation.lignes || []).length >= 1;
+        const ok5 = !!(this.data.cadrage.planb && this.data.cadrage.planb.trim().length);
+        
+        document.getElementById('chk-obj').checked = ok1;
+        score += ok1 ? 1 : 0;
+        document.getElementById('chk-ref').checked = ok2;
+        score += ok2 ? 1 : 0;
+        document.getElementById('chk-seances').checked = ok3;
+        score += ok3 ? 1 : 0;
+        document.getElementById('chk-eval').checked = ok4;
+        score += ok4 ? 1 : 0;
+        document.getElementById('chk-planb').checked = ok5;
+        score += ok5 ? 1 : 0;
+        
+        const pct = Math.round((score / total) * 100);
+        const tag = document.getElementById('compliance-score');
+        tag.textContent = `Score: ${pct}%`;
+        tag.className = 'tag ' + (pct >= 80 ? 'success' : 'warning');
+        this.toast(`Vérification terminée — ${pct}%`, pct >= 80 ? 'success' : 'warn');
+      },
+
+      // Evaluations
+      addEvaluation() {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><span class="editable" contenteditable="true">Type</span></td>
+          <td><span class="editable" contenteditable="true">Modalités</span></td>
+          <td><span class="editable" contenteditable="true">Critères</span></td>
+          <td><span class="editable" contenteditable="true">Barème</span></td>
+          <td><button class="danger" onclick="app.removeRow(this)">×</button></td>
+        `;
+        document.getElementById('eval-rows').appendChild(tr);
+        this.toast('Évaluation ajoutée', 'success');
+      },
+
+      removeRow(btn) {
+        btn.closest('tr').remove();
+        this.save();
+      },
+
+      // CSV Export
+      exportSeancesCSV() {
+        const rows = [["Numero", "Titre", "Duree", "Objectifs", "Activites", "Validation"]];
+        this.data.seances.forEach(s => {
+          rows.push([
+            s.numero,
+            s.titre,
+            s.duree,
+            s.objectifs.join(' | '),
+            s.activites.join(' | '),
+            s.validation
+          ]);
+        });
+        this.downloadCSV(rows, `seances_${this.slug(this.data.meta.titre)}.csv`);
+      },
+
+      exportEvaluationsCSV() {
+        const rows = [["Type", "Modalités", "Critères", "Barème"]];
+        this.data.evaluation.lignes.forEach(line => {
+          rows.push(line.slice(0, 4));
+        });
+        this.downloadCSV(rows, `evaluations_${this.slug(this.data.meta.titre)}.csv`);
+      },
+
+      // Storage & IO
+      getStorageKey() {
+        return 'ficheSequence_' + this.slug(this.data.meta.titre);
+      },
+
+      save() {
+        try {
+          localStorage.setItem(this.getStorageKey(), JSON.stringify(this.data));
+        } catch (e) {
+          console.error(e);
+        }
+      },
+
+      load() {
+        try {
+          const raw = localStorage.getItem(this.getStorageKey());
+          if (raw) {
+            this.data = JSON.parse(raw);
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      },
+
+      reset() {
+        this.modal('Réinitialiser', "Revenir au modèle initial ? (les données locales seront perdues)", () => {
+          localStorage.removeItem(this.getStorageKey());
+          location.reload();
+        });
+      },
+
+      saveJSON() {
+        this.syncFromDOM();
+        const blob = new Blob([JSON.stringify(this.data, null, 2)], {type: 'application/json'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `sequence_${this.slug(this.data.meta.titre)}.json`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+        this.toast('Fichier JSON téléchargé', 'success');
+      },
+
+      loadJSON() {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.json';
+        input.onchange = e => {
+          const file = e.target.files[0];
+          if (!file) return;
+          const reader = new FileReader();
+          reader.onload = ev => {
+            try {
+              this.data = JSON.parse(ev.target.result);
+              this.save();
+              location.reload();
+            } catch (err) {
+              this.toast('Erreur lors du chargement', 'error');
+            }
+          };
+          reader.readAsText(file);
+        };
+        input.click();
+      },
+
+      exportPDF() {
+        this.toast('Export PDF en cours…', 'info');
+        window.print();
+      },
+
+      print() {
+        window.print();
+      },
+
+      // UI
+      toggleMenu() {
+        document.getElementById('fab-menu').classList.toggle('open');
+      },
+
+      toast(msg, type = 'success') {
+        const c = document.getElementById('toasts');
+        const t = document.createElement('div');
+        t.className = `toast ${type === 'error' ? 'error' : type === 'info' ? 'info' : type === 'warn' ? 'warn' : ''}`;
+        t.innerHTML = `<span>${type === 'success' ? '✓' : type === 'error' ? '✗' : '❗'}</span><span>${this.escapeHtml(msg)}</span>`;
+        c.appendChild(t);
+        setTimeout(() => {
+          t.style.opacity = '0';
+          setTimeout(() => c.removeChild(t), 300);
+        }, 3000);
+      },
+
+      modal(title, msg, cb) {
+        document.getElementById('modal-title').textContent = title;
+        document.getElementById('modal-body').textContent = msg;
+        document.getElementById('modal-ov').style.display = 'flex';
+        this.modalCb = cb;
+      },
+
+      closeModal() {
+        document.getElementById('modal-ov').style.display = 'none';
+        this.modalCb = null;
+      },
+
+      confirmModal() {
+        if (this.modalCb) this.modalCb();
+        this.closeModal();
+      },
+
+      // Utils
+      downloadCSV(rows, filename) {
+        const csv = rows.map(r => r.map(x => `"${String(x).replace(/"/g, '""')}"`).join(',')).join('\n');
+        const blob = new Blob([csv], {type: 'text/csv;charset=utf-8;'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+        this.toast('CSV exporté', 'success');
+      },
+
+      slug(s) {
+        return (s || 'sequence').toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '');
+      },
+
+      escapeHtml(s) {
+        return String(s).replace(/[&<>"']/g, m => ({
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          '"': '&quot;',
+          "'": '&#39;'
+        }[m]));
+      }
+    };
+
+    // Init
+    document.addEventListener('DOMContentLoaded', () => app.init());
+  </script>
+</body>
+</html>
